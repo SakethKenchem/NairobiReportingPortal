@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+              
+      body {
+            background-color: #f8f9fa;
+      }
+      .btn{
+        width: 100%;
+      }
+    </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light ">
+    <div class="container-fluid">
+      <a class="navbar-brand" >
+        <img src="Coat_of_Arms_of_Nairobi.svg.png" alt="Logo" width="50" height="50"
+          class="d-inline-block align-text-top">
+        Nairobi Reporting Portal
+      </a>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="text-center">Officer Login</h3>
+          </div>
+          <div class="card-body">
+            <form action="officerloginhandler.php" method="post">
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username"
+                  placeholder="Enter your username" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password"
+                  placeholder="Enter your password" required>
+              </div>
+              <button type="submit" class="btn btn-warning">Login</button>
+            </form>
+          </div>
+          <div class="card-footer">
+            <p class="text-center">Don't have an account? <a href="officersignup.html">Sign up here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

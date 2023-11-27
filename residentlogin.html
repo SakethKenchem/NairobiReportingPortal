@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">  
+  <title>Resident Login</title>
+  <link rel="icon" href="Coat_of_Arms_of_Nairobi.svg.png" type="image/icon type">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f1f1f1;
+    }
+    
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .form-box {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    
+    .form-box h2 {
+      text-align: center;
+    }
+    
+    .form-box input[type="text"],
+    .form-box input[type="password"],
+    .form-box input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    
+    .form-box button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    
+    .form-box .switch-page {
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    .form-box .switch-page a {
+      text-decoration: none;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    .light-mode {
+      background-color: #f1f1f1;
+      color: #000;
+    }
+
+    .dark-mode {
+      background-color: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="light-mode">
+  <nav class="navbar navbar-light bg-light container-fluid justify-content-between">
+    <a class="navbar-brand" href="#" style="margin-left: 10px;">
+      <img src="Coat_of_Arms_of_Nairobi.svg.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      Nairobi Reporting Portal
+    </a>
+    <div><a href="homepageviewnologin.php" style="color: #000; margin-left: 800px; text-decoration: none;">View Posts Without Login</a>
+    </div>
+    <!--About link-->
+    <div><a href="about_us_no_login.html" style="color: #000; margin-right: 15px; text-decoration: none;">About</a>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="form-box" id="login-form">
+      <h2>Login</h2>
+      <form method="POST" action="residentloginhandler.php">
+        <div class="mb-3">
+          <label for="username">Username: </label>
+          <input type="text" placeholder="Username" required name="username">
+        </div>
+        <div class="mb-3">
+          <label for="national_id">National ID/Passport: </label>
+          <input type="text" placeholder="National ID/Passport" required name="national_id">
+        </div>
+        <div class="mb-3">
+          <label for="password">Password: </label>
+          <input type="password" placeholder="Password" required name="password" id="password-field">
+        </div>
+        <input type="checkbox" onclick="togglePasswordVisibility()"> Show Password
+        <button type="submit" name="login">Login</button>
+      </form>
+      <div class="switch-page">
+        Don't have an account? <a href="residentsignup.html">Sign up</a>
+      </div>
+      <!--forgot password-->
+      <div style="text-align: center; margin-top: 20px;">
+        <b><a href="forgotpassword.php" style="color: green; text-decoration: none; ">Forgot Password?</a></b>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePasswordVisibility() {
+      var passwordField = document.getElementById("password-field");
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+      } else {
+        passwordField.type = "password";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer Signup Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .btn{
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light ">
+    <div class="container-fluid">
+      <a class="navbar-brand" >
+        <img src="Coat_of_Arms_of_Nairobi.svg.png" alt="Logo" width="50" height="50"
+          class="d-inline-block align-text-top">
+        Nairobi Reporting Portal
+      </a>
+      
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header text-center">
+            <h3>Signup</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" action="officersignuphandler.php">
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+              </div>
+              <div class="mb-3">
+                <label for="phonenumber" class="form-label">Phonenumber</label>
+                <input type="text" class="form-control" id="phonenumber" name="phonenumber" placeholder="Enter your phonenumber" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+              </div>
+              <button type="submit" class="btn btn-warning btn-block" name="signup">Signup</button>
+            </form>
+          </div>
+          <div class="card-footer text-center">
+            <p>Already have an account? <a href="officerlogin.html">Login here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
