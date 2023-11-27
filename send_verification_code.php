@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $insert_code_result = mysqli_query($conn, $insert_code_query);
 
         if (!$insert_code_result) {
-            echo "Failed to generate and store verification code. Please try again later.";
+            echo "Failed to generate and store verification code!. Please try again later.";
             exit();
         }
 
