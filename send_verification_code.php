@@ -1,16 +1,16 @@
 <?php
-// send_verification_code.php
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
 
-    // Generate a random 6-digit verification code
+
     $verification_code = sprintf('%06d', mt_rand(0, 999999));
 
-    // Set the expiration time to 10 minutes from now
+
     $expiration_time = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
-    // Store the verification code and expiration time in the verification_codes table
+
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -37,12 +37,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
 
-        // Your email sending logic with mail function
+
         $subject = "Verification Code";
         $message = "Your verification code is: $verification_code";
-        $headers = 'From: your@gmail.com'; // Replace with your Gmail email address
+        $headers = 'From: your@gmail.com'; 
 
-        // Replace the email sending part with your actual email sending code
+
         if (mail($email, $subject, $message, $headers)) {
             echo "Verification code sent successfully.";
         } else {
