@@ -47,7 +47,7 @@ if (!$conn) {
         <form action="security_phrase_verify.php" method="POST">
             <div class="mb-3">
                 <label for="security_phrase" class="form-label">Security Phrase</label>
-                <input type="password" class="form-control" id="security_phrase" name="security_phrase">
+                <input type="password" class="form-control" id="security_phrase" name="security_phrase" placeholder="Security Phrase" required>
             </div>
             <button type="submit" class="btn btn-primary">Verify</button>
         </form>
