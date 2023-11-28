@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         exit();
     }
 
-    // Retrieve user details including national_id from the database
+    // Retrieve user details
     $get_user_sql = "SELECT userid, password, national_id FROM userlogincredentials WHERE username = '$username'";
     $result = mysqli_query($conn, $get_user_sql);
 
@@ -40,12 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                 session_start();
                 $_SESSION['userid'] = $row['userid'];
                 $_SESSION['username'] = $username;
-                $_SESSION['national_id'] = $stored_national_id; // Store national_id in the session
+                $_SESSION['national_id'] = $stored_national_id;
                 $_SESSION['loggedin'] = true;
                 
-                // Insert login time into userloginhistory table
+
                 $userid = $row['userid'];
-                $login_time = date("Y-m-d H:i:s"); // Current timestamp
+                $login_time = date("Y-m-d H:i:s"); 
                 $insert_login_time_sql = "INSERT INTO userloginhistory (userid, login_time) VALUES ($userid, '$login_time')";
                 mysqli_query($conn, $insert_login_time_sql);
                 
