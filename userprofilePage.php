@@ -157,8 +157,6 @@ function updateUserDetails($conn, $username, $email, $nationalId, $phoneNumber, 
         echo '<p><strong>Current National ID/Passport:</strong> ' . $userDetails["national_id"] . '</p>';
         echo '<p><strong>Current Phone Number:</strong> ' . $userDetails["phoneNumber"] . '</p>';
         echo '<p><strong>Registered on:</strong> ' . $userDetails["account_created_at"] . '</p>';
-        //security phrase
-        echo '<p><strong>Security Phrase:</strong> ' . $userDetails["security_phrase_or_digit"] . '</p>';
         echo '</div>';
     } else {
         echo '<p>User details not found.</p>';
@@ -184,10 +182,21 @@ function updateUserDetails($conn, $username, $email, $nationalId, $phoneNumber, 
             <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" value="<?php echo isset($userDetails["phoneNumber"]) ? $userDetails["phoneNumber"] : ""; ?>">
         </div>
         <!--security phrase-->
-        <div class="form-group">
-            <label for="security_phrase">Security Phrase:</label>
-            <input type="password" class="form-control" name="security_phrase" id="security_phrase" value="<?php echo isset($userDetails["security_phrase_or_digit"]) ? $userDetails["security_phrase_or_digit"] : ""; ?>">
-        </div>
+        <div id="securityPhraseContainer" style="display: none;">
+    <p><strong>Security Phrase:</strong> <?php echo isset($userDetails["security_phrase_or_digit"]) ? $userDetails["security_phrase_or_digit"] : ""; ?></p>
+</div>
+
+<!-- Update the security phrase input to be password type -->
+<div class="form-group">
+    <label for="security_phrase">Security Phrase:</label>
+    <input type="password" class="form-control" name="security_phrase" id="security_phrase" value="<?php echo isset($userDetails["security_phrase_or_digit"]) ? $userDetails["security_phrase_or_digit"] : ""; ?>">
+</div>
+        <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showSecurityPhrase" onclick="toggleSecurityPhrase()">
+    <label class="form-check-label" for="showSecurityPhrase">
+        Show Security Phrase
+    </label>
+</div>
         <div>
             <button type="submit" class="btn btn-primary" name="submit">Update Details</button>
         </div>
@@ -202,6 +211,21 @@ function updateUserDetails($conn, $username, $email, $nationalId, $phoneNumber, 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function toggleSecurityPhrase() {
+        var checkbox = document.getElementById("showSecurityPhrase");
+        var securityPhraseContainer = document.getElementById("securityPhraseContainer");
+        var securityPhraseInput = document.getElementById("security_phrase");
+
+        if (checkbox.checked) {
+            securityPhraseContainer.style.display = "block";
+            securityPhraseInput.type = "text";
+        } else {
+            securityPhraseContainer.style.display = "none";
+            securityPhraseInput.type = "password";
+        }
+    }
+</script>
 </html>
 
 <?php
