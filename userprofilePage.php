@@ -115,25 +115,29 @@
     }
 
     // Function to update user details in the database
-    function updateUserDetails($conn, $username, $email, $nationalId, $phoneNumber, $userId) {
-        $sql = "UPDATE userlogincredentials SET username='$username', email='$email', national_id='$nationalId', phoneNumber='$phoneNumber' WHERE userid=$userId";
+// Function to update user details in the database
+function updateUserDetails($conn, $username, $email, $nationalId, $phoneNumber, $security_phrase, $userId) {
+    $sql = "UPDATE userlogincredentials SET username='$username', email='$email', national_id='$nationalId', phoneNumber='$phoneNumber', security_phrase_or_digit='$security_phrase' WHERE userid=$userId";
 
-        if ($conn->query($sql) === TRUE) {
-            return true;
-        } else {
-            return false;
-        }
+    if ($conn->query($sql) === TRUE) {
+        return true;
+    } else {
+        return false;
     }
+}
+
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         $newUsername = $_POST["username"];
         $newEmail = $_POST["email"];
         $newNationalId = $_POST["national_id"];
         $phoneNumber = $_POST["phoneNumber"];
+        //security phrase
+        $security_phrase = $_POST['security_phrase']; // Corrected the variable name
 
         $loggedInUserId = $_SESSION["userid"];
 
-        if (updateUserDetails($conn, $newUsername, $newEmail, $newNationalId, $phoneNumber, $loggedInUserId)) {
+        if (updateUserDetails($conn, $newUsername, $newEmail, $newNationalId, $phoneNumber, $security_phrase, $loggedInUserId)) {
             echo '<div class="alert alert-success mt-4">Your details were updated successfully!</div>';
         } else {
             echo '<div class="alert alert-danger mt-4">Error updating your details: ' . $conn->error . '</div>';
@@ -153,6 +157,8 @@
         echo '<p><strong>Current National ID/Passport:</strong> ' . $userDetails["national_id"] . '</p>';
         echo '<p><strong>Current Phone Number:</strong> ' . $userDetails["phoneNumber"] . '</p>';
         echo '<p><strong>Registered on:</strong> ' . $userDetails["account_created_at"] . '</p>';
+        //security phrase
+        echo '<p><strong>Security Phrase:</strong> ' . $userDetails["security_phrase_or_digit"] . '</p>';
         echo '</div>';
     } else {
         echo '<p>User details not found.</p>';
@@ -176,6 +182,11 @@
         <div class="form-group">
             <label for="phoneNumber">Phone Number:</label>
             <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" value="<?php echo isset($userDetails["phoneNumber"]) ? $userDetails["phoneNumber"] : ""; ?>">
+        </div>
+        <!--security phrase-->
+        <div class="form-group">
+            <label for="security_phrase">Security Phrase:</label>
+            <input type="password" class="form-control" name="security_phrase" id="security_phrase" value="<?php echo isset($userDetails["security_phrase_or_digit"]) ? $userDetails["security_phrase_or_digit"] : ""; ?>">
         </div>
         <div>
             <button type="submit" class="btn btn-primary" name="submit">Update Details</button>
