@@ -9,6 +9,12 @@ This system is a platform for the residents of Nairobi to report any issues they
 - Powerful admin features to delete posts, block and unblock users,and delete users that do not meet set guidelines.
 - Concerned government agency officers can update the statuses of complaints, view a detailed breakdown of the complaints in the county and can download a PDF copy.
 
+## How to Use
+1. Download Xampp.
+2. Create a folder inside the "htdocs" folder inside main xampp folder.
+3. In phpmyadmin, create a database called "isp". Then import the included SQL file.
+4. In any modern web browser, go to "http://localhost/NairobiReportingPortal/residentlogin.html" to start using the system.
+
 ## Sample Images
 ### Resident Login & Signup
 ![image](https://github.com/SakethKenchem/NairobiReportingPortal/assets/36359779/d5d5cac6-c723-4276-81ef-6ffa0f5a4186)
