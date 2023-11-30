@@ -20,6 +20,6 @@ This system is a platform for the residents of Nairobi to report any issues they
 ![image](https://github.com/SakethKenchem/NairobiReportingPortal/assets/36359779/e2678fe9-146e-4fda-aff7-dd37b87cc618)
 ### User Profile Page
 ![image](https://github.com/SakethKenchem/NairobiReportingPortal/assets/36359779/cc2f20e5-8128-457e-b0ea-aba4fbd71db0)
-## My Complaints
+### My Complaints
 ![image](https://github.com/SakethKenchem/NairobiReportingPortal/assets/36359779/69b7ecc9-1384-4850-8995-8ae63d9b0323)
 
