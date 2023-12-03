@@ -13,7 +13,7 @@ This system is a platform for the residents of Nairobi to report any issues they
 1. Download Xampp.
 2. Create a folder called "NairobiReportingPortal" inside the "htdocs" folder inside main xampp folder.
 3. In phpmyadmin, create a database called "isp". Then import the included SQL file.
-4. In any modern web browser, go to "http://localhost/NairobiReportingPortal/residentlogin.html" to start using the system.
+4. In any modern web browser, go to "http://localhost/NairobiReportingPortal/residentlogin.html" to start using the system. Make sure Apache and MySQL modules are running.
 
 ## Sample Images
 ### Resident Login & Signup
