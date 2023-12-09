@@ -1,75 +1,104 @@
 <?php
 session_start();
-
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "isp";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("Location: residentlogin.html");
-    exit;
-}
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset_password"])) {
+    $email = $_POST["email"];
+    $new_password = $_POST["new_password"];
+    $confirm_password = $_POST["confirm_password"];
+    $nationalid = $_POST["nationalid"];
+    $entered_code = $_POST["verification_code"];
 
-if (!isset($_SESSION['userid']) || empty($_SESSION['userid'])) {
-    echo '<div class="alert alert-danger mt-4">Please log in to change your password.</div>';
-    exit();
-}
+    // Check if the email and National ID exist in the database
+    $query = "SELECT * FROM userlogincredentials WHERE email = '$email' AND national_id = '$nationalid'";
+    $result = mysqli_query($conn, $query);
 
-$errorMessage = ""; // Initialize error message variable
+    if (mysqli_num_rows($result) === 0) {
+        // Email or National ID not found in the database, display an error message
+        $_SESSION["error_message"] = "Email or National ID not found. Please check your email address and National ID.";
+        header("Location: Userchangepassword.php");
+        exit();
+    }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update_password"])) {
-    $emailAddress = $_POST["email"];
-    $nationalID = $_POST["national_id"];
-    $currentPassword = $_POST["current_password"];
-    $newPassword = $_POST["new_password"];
+    // Retrieve the stored verification code and expiration time from the database
+    $user_id_query = "SELECT userid FROM userlogincredentials WHERE email = '$email'";
+    $user_id_result = mysqli_query($conn, $user_id_query);
 
-    $loggedInUserId = $_SESSION["userid"];
+    if ($user_id_result) {
+        $user_id_row = mysqli_fetch_assoc($user_id_result);
+        $user_id = $user_id_row["userid"];
 
-    // Check if the provided email and national ID match the records in the database
-    $sql = "SELECT email, national_id FROM userlogincredentials WHERE userid = $loggedInUserId";
-    $result = $conn->query($sql);
-    $row = $result->fetch_assoc();
+        $verification_query = "SELECT code, expires_at FROM verification_codes WHERE user_id = '$user_id'";
+        $verification_result = mysqli_query($conn, $verification_query);
 
-    if ($emailAddress === $row["email"] && $nationalID === $row["national_id"]) {
-        // Proceed with password update logic
-        $sql = "SELECT password FROM userlogincredentials WHERE userid = $loggedInUserId";
-        $result = $conn->query($sql);
-        $row = $result->fetch_assoc();
-        $currentHashedPassword = $row["password"];
+        if ($verification_result) {
+            $verification_row = mysqli_fetch_assoc($verification_result);
+            $stored_code = $verification_row["code"];
+            $expires_at = strtotime($verification_row["expires_at"]);
+            $current_time = strtotime('now');
 
-        // Verify the current password with the hashed password
-        if (password_verify($currentPassword, $currentHashedPassword)) {
-            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
-            $sql = "UPDATE userlogincredentials SET password = '$hashedPassword' WHERE userid = $loggedInUserId";
-
-            if ($conn->query($sql) === TRUE) {
-                echo '<div class="alert alert-success mt-4">Password updated successfully!</div>';
-            } else {
-                echo '<div class="alert alert-danger mt-4">Error updating password: ' . $conn->error . '</div>';
+            if ($entered_code !== $stored_code || $current_time > $expires_at) {
+                $_SESSION["error_message"] = "Invalid or expired verification code. Please request a new code.";
+                header("Location: Userchangepassword.php");
+                exit();
             }
+
+            // Validate the new password and confirmation
+            if ($new_password !== $confirm_password) {
+                $_SESSION["error_message"] = "Passwords do not match.";
+                header("Location: Userchangepassword.php");
+                exit();
+            }
+
+            // Update the user's password in the database
+            $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
+            $update_query = "UPDATE userlogincredentials SET password = '$hashed_password' WHERE email = '$email'";
+            $update_result = mysqli_query($conn, $update_query);
+
+            if (!$update_result) {
+                $_SESSION["error_message"] = "Password update failed. Please try again later.";
+                header("Location: Userchangepassword.php");
+                exit();
+            }
+
+            // Remove the used verification code from the database
+            $delete_verification_query = "DELETE FROM verification_codes WHERE user_id = '$user_id'";
+            mysqli_query($conn, $delete_verification_query);
+
+            // Password updated successfully, display a success message
+            $_SESSION["success_message"] = "Password reset successful.";
+            header("Location: Userchangepassword.php");
+            exit();
         } else {
-            $errorMessage = "Invalid current password.";
+            $_SESSION["error_message"] = "Failed to retrieve verification code. Please try again later.";
+            header("Location: Userchangepassword.php");
+            exit();
         }
     } else {
-        $errorMessage = "Email and/or National ID do not match the records.";
+        $_SESSION["error_message"] = "Failed to retrieve user information. Please try again later.";
+        header("Location: Userchangepassword.php");
+        exit();
     }
 }
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Change Password</title>
+    <title>Forgot Password</title>
+    <!-- Add your favicon link here -->
     <link rel="icon" href="Coat_of_Arms_of_Nairobi.svg.png" type="image/icon type">
+
+    <!-- Add Bootstrap CSS link here -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <style>
         body {
@@ -77,6 +106,7 @@ $conn->close();
             flex-direction: column;
             align-items: center;
             padding-top: 20px;
+            margin-bottom: 15px;
         }
 
         .form-container {
@@ -115,6 +145,9 @@ $conn->close();
             border-radius: 5px;
             background-color: green;
         }
+        .form-control{
+            width: 350px;
+        }
     </style>
 </head>
 <body>
@@ -144,36 +177,69 @@ $conn->close();
     </div>
 </nav>
 <div class="container">
-    <h1 class="my-4">Change Password</h1>
-    <?php
-    if (!empty($errorMessage)) {
-        echo '<div class="alert alert-danger mt-4">' . $errorMessage . '</div>';
-    }
-    ?>
-    <form method="post" class="my-4">
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" class="form-control" name="email" id="email" required>
+    <h2 class="mt-4">Forgot Password</h2>
+
+    <?php if (isset($_SESSION["error_message"])) : ?>
+        <div class="alert alert-danger mt-3"><?php echo $_SESSION["error_message"]; ?></div>
+        <?php unset($_SESSION["error_message"]); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION["success_message"])) : ?>
+        <div class="alert alert-success mt-3"><?php echo $_SESSION["success_message"]; ?></div>
+        <?php unset($_SESSION["success_message"]); ?>
+    <?php endif; ?>
+
+    <form method="POST" action="Userchangepassword.php" class="mt-3">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email Address:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
         </div>
-        <div class="form-group">
-            <label for="national_id">National ID:</label>
-            <input type="text" class="form-control" name="national_id" id="national_id" required>
+        <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">Send Code</button>
+
+        <div class="mb-3">
+            <label for="nationalid" class="form-label">National ID:</label>
+            <input type="text" class="form-control" id="nationalid" name="nationalid" required>
         </div>
-        <div class="form-group">
-            <label for="current_password">Current Password:</label>
-            <input type="password" class="form-control" name="current_password" id="current_password" required>
+        <div class="mb-3">
+            <label for="new_password" class="form-label">New Password:</label>
+            <input type="password" class="form-control" id="new_password" name="new_password" required>
         </div>
-        <div class="form-group">
-            <label for="new_password">New Password:</label>
-            <input type="password" class="form-control" name="new_password" id="new_password" required>
+        <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm New Password:</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
         </div>
-        <div>
-            <button type="submit" class="btn btn-danger" name="update_password" style="margin-top: 10px;">Update Password</button>
+
+        <div class="mb-3">
+            <label for="verification_code" class="form-label">Verification Code:</label>
+            <input type="text" class="form-control" id="verification_code" name="verification_code" required>
         </div>
+
+        <button type="submit" class="btn btn-primary" name="reset_password">Reset Password</button>
     </form>
 </div>
-</body>
+
+<script>
+    function sendVerificationCode() {
+        var email = document.getElementById("email").value;
+
+        if (email.trim() === "") {
+            alert("Please enter your email address first.");
+            return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "send_verification_code.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert(xhr.responseText);
+            }
+        };
+        xhr.send("email=" + email);
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
