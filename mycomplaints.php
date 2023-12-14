@@ -127,7 +127,7 @@
     }
 ?>
     <h2 class="text-center mb-4" style="margin-top: 5px;">My Complaints</h2>
-<div class="container mt-4">
+<div class="container mt-4" style="font-size:small;">
     <table class="table table-striped">
         <thead>
             <tr>

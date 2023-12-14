@@ -98,7 +98,7 @@
     <!--button to get geolocation from api-->
     <button type="button" class="btn btn-primary" onclick="getLocation()">Get Location</button>
 
-    <form class="row g-3" action="process_complaint_form.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <form class="row g-3" action="process_complaint_form.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()" style="font-size:small;">
         <div class="col-md-6">
             <label for="name" class="form-label">Full Name:</label>
             <input type="text" class="form-control border" id="name" name="name" value="<?php echo $username = $_SESSION['username']; ?>" >
