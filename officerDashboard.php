@@ -154,7 +154,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     <div class="container mt-4">
         <h1>Officer Dashboard</h1>
-    <form action="officerDashboard.php" method="get" class="mb-3">
+    <form action="officerDashboard.php" method="get" class="mb-3" >
         <div class="form-group">
             <!--<label for="search">Search Complaint or User by ID or Locality:</label>-->
             <input type="text" class="form-control" style="width: 300px;" id="search" name="search" placeholder="Search">
@@ -162,7 +162,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         <button type="submit" class="btn btn-danger" style="margin-top: 10px;">Search</button>
     </form>
 
-    <table class="table table-bordered table-striped mt-4">
+    <table class="table table-bordered table-striped mt-4" style="font-size: small;">
             <thead>
                 <tr>
                     <th>Complaint ID</th>

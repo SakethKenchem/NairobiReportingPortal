@@ -96,7 +96,7 @@
         <canvas id="localitiesChart"></canvas>
 </div>
 
-<table style="margin-top: auto;">
+<table style="margin-top: auto; font-size: small;" >
     <tr>
         <th>Total Complaints</th>
         <th>Received</th>
@@ -228,7 +228,7 @@ while ($rowLocality = mysqli_fetch_assoc($resultLocalities)) {
     </tr>
 </table>
 
-<table>
+<table style="font-size: small;">
     <tr>
         <th>Westlands</th>
         <td><?php echo $westlands; ?></td>
