@@ -221,8 +221,8 @@ if (isset($_POST["search"])) {
 
             <div class="card-body">
 
-                <p class="card-text" style="margin-top: 0px;"><b>Location:</b> <?php echo $row["location"]; ?></p>
-                <p class="card-text"><b>Description:</b> <?php echo $row["description"]; ?></p>
+                <p class="card-text" style="margin-top: 0px; font-size:small"><b>Location:</b> <?php echo $row["location"]; ?></p>
+                <p class="card-text" style="font-size: small;"><b>Description:</b> <?php echo $row["description"]; ?></p>
 
                 <!-- Upvote and downvote -->
                 <p class="card-text">Votes: <?php echo $row["votes"]; ?></p>
