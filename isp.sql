@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 27, 2023 at 06:56 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- Generation Time: Jan 12, 2024 at 06:41 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -92,7 +92,7 @@ CREATE TABLE `complaints` (
 
 INSERT INTO `complaints` (`complaint_id`, `userid`, `name`, `email`, `id_passport`, `phone`, `address`, `city`, `issue_type`, `issue`, `sub_issues`, `if_choice_is_other`, `image_path`, `date_created`, `status`) VALUES
 (1, 1, 'Saketh Kenchem', 's.kenchem@gmail.com', 'V3735185', '0112716955', '07, Jubilee Apartments, Mpaka Road', 'Westlands', 'Roads and Related Issues', 'there are very many potholes', 'Potholes', '', 'uploads/potholes on road after rain.jpg', '2023-11-17 17:25:35', 'received'),
-(2, 1, 'Saketh Kenchem', 's.kenchem@gmail.com', 'V3735185', '0112716955', '07, Jubilee Apartments, Mpaka Road', 'Parklands', 'Water and Sanitation', 'there are water leakage', 'Water Leakage', '', 'uploads/broken pipe.jpg', '2023-11-17 17:30:42', 'underway'),
+(2, 1, 'Saketh Kenchem', 's.kenchem@gmail.com', 'V3735185', '0112716955', '07, Jubilee Apartments, Mpaka Road', 'Parklands', 'Roads and Related Issues', 'there are water leakage', 'Water Leakage', '', 'uploads/broken pipe.jpg', '2023-11-17 17:30:42', 'underway'),
 (3, 1, 'Saketh Kenchem', 'saketh.kenchem@strathmore.edu', 'V3735185', '0112716955', '07, Jubilee Apartments, Mpaka Road', 'Githurai', 'Water and Sanitation', 'there is water leakage', 'Water Leakage', '', 'uploads/broken pipe.jpg', '2023-11-18 09:10:30', 'underway');
 
 -- --------------------------------------------------------
@@ -181,7 +181,7 @@ CREATE TABLE `userlogincredentials` (
 --
 
 INSERT INTO `userlogincredentials` (`userid`, `username`, `email`, `password`, `national_id`, `phoneNumber`, `is_blocked`, `account_created_at`, `security_phrase_or_digit`, `profile_photo`) VALUES
-(1, 'Saketh Kenchem', 's.kenchem@gmail.com', '$2y$10$1it542vAkjjGXyAtvYmVJeWoMBZGBIYNuOm.6tJVkA9X0XL0.WJQW', 'V3735185', '0112716955', 0, '2023-11-07 21:31:06', 'sakethkenchem', NULL);
+(1, 'Saketh Kenchem', 's.kenchem@gmail.com', '$2y$10$xGNz2WL9eT0iMTXjoPKP8.TBd2/NZCT1nwOocK.fhw4inEUESYE0S', 'V3735185', '0112716955', 0, '2023-11-07 21:31:06', 'sakethkenchem', NULL);
 
 -- --------------------------------------------------------
 
@@ -213,7 +213,18 @@ INSERT INTO `userloginhistory` (`id`, `userid`, `login_time`, `logout_time`) VAL
 (10, 1, '2023-11-26 16:31:09', '2023-11-26 16:33:08'),
 (11, 1, '2023-11-26 19:48:27', '2023-11-26 19:49:45'),
 (12, 1, '2023-11-26 19:58:19', '2023-11-26 19:58:30'),
-(13, 1, '2023-11-26 20:11:44', NULL);
+(13, 1, '2023-11-26 20:11:44', '2023-12-09 18:51:46'),
+(14, 1, '2023-11-27 19:34:07', '2023-12-09 18:51:46'),
+(15, 1, '2023-11-28 11:05:01', '2023-12-09 18:51:46'),
+(16, 1, '2023-11-30 13:58:02', '2023-12-09 18:51:46'),
+(17, 1, '2023-12-09 18:24:32', '2023-12-09 18:51:46'),
+(18, 1, '2023-12-09 18:51:52', '2023-12-09 19:00:17'),
+(19, 1, '2023-12-09 19:00:30', NULL),
+(20, 1, '2023-12-13 11:05:22', NULL),
+(21, 1, '2023-12-14 19:22:54', NULL),
+(22, 1, '2023-12-15 09:54:22', NULL),
+(23, 1, '2023-12-15 16:08:08', NULL),
+(24, 1, '2023-12-30 11:20:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -228,14 +239,6 @@ CREATE TABLE `verification_codes` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `expires_at` timestamp NOT NULL DEFAULT (current_timestamp() + interval 10 minute)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `verification_codes`
---
-
-INSERT INTO `verification_codes` (`id`, `user_id`, `code`, `created_at`, `expires_at`) VALUES
-(1, 1, '759135', '2023-11-26 19:12:10', '2023-11-26 17:22:10'),
-(2, 1, '693246', '2023-11-26 19:17:20', '2023-11-26 17:27:20');
 
 --
 -- Indexes for dumped tables
@@ -354,7 +357,7 @@ ALTER TABLE `userlogincredentials`
 -- AUTO_INCREMENT for table `userloginhistory`
 --
 ALTER TABLE `userloginhistory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `verification_codes`
