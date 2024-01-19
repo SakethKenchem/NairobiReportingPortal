@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Check if user is not logged in
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     // give a Bootstrap alert if not logged in
     echo '<div class="alert alert-danger" role="alert">
@@ -10,7 +9,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     exit;
 }
 
-// Create connection
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -37,9 +36,9 @@ function getSeverityLevel($votes)
 
 if (isset($_POST["search"])) {
     $search = $_POST["search"];
-    $search = $conn->real_escape_string($search); // Sanitize user input
+    $search = $conn->real_escape_string($search); 
 
-    // Modify the SQL query to filter posts based on the search query
+    
     $result = $conn->query("SELECT * FROM posts 
                             WHERE username LIKE '%$search%' 
                             OR location LIKE '%$search%' 
@@ -48,7 +47,7 @@ if (isset($_POST["search"])) {
                             OR votes >= 135 AND votes <= 150 AND description LIKE '%$search%'
                             ORDER BY postid DESC");
 } else {
-    // If no search query, fetch all posts
+    
     $result = $conn->query("SELECT * FROM posts ORDER BY postid DESC");
 }
 ?>
@@ -71,7 +70,7 @@ if (isset($_POST["search"])) {
             flex-direction: column;
             align-items: center;
             padding-top: 20px;
-            margin-bottom: 100px; /* Add margin at the bottom to prevent overlap with the posts */
+            margin-bottom: 100px; 
         }
 
         .post-container {
@@ -79,8 +78,8 @@ if (isset($_POST["search"])) {
             padding: 10px;
             margin-top: 50px;
             border: 1px solid #ccc;
-            margin-bottom: 20px; /* Change this value as needed */
-            z-index: 1; /* Ensure posts stay below the navbar */
+            margin-bottom: 20px; 
+            z-index: 1; 
         }
 
         .post-container img {
@@ -115,7 +114,7 @@ if (isset($_POST["search"])) {
         }
 
         .greeting-container {
-            animation: slideLeftToRight 1.15s forwards; /* Use the "slideLeftToRight" animation for the greeting */
+            animation: slideLeftToRight 1.15s forwards; 
             margin-top: 5px;
             margin-right: 1000px;
             margin-left: 20px;
@@ -123,12 +122,12 @@ if (isset($_POST["search"])) {
 
         @keyframes slideLeftToRight {
             from {
-                transform: translateX(-100%); /* Start from the left */
+                transform: translateX(-100%); 
                 opacity: 0;
             }
 
             to {
-                transform: translateX(0); /* Move to its original position */
+                transform: translateX(0); 
                 opacity: 1;
             }
         }
@@ -184,7 +183,7 @@ if (isset($_POST["search"])) {
         </div>
     </form>
 
-    <!-- Display greeting based on the time of day -->
+    <!--  greeting  -->
     <div class="greeting-container">
         <?php
         date_default_timezone_set('Africa/Nairobi');
@@ -280,7 +279,7 @@ if (isset($_POST["search"])) {
 
     <script src="dark-mode.js"></script>
     <script>
-        // Get the button
+        
         var mybutton = document.getElementById("myBtn");
 
         // When the user scrolls down 20px from the top of the document, show the button
@@ -296,13 +295,13 @@ if (isset($_POST["search"])) {
             }
         }
 
-        //  button toscroll to the top of the document
+        
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
 
-        // Function to toggle comments visibility
+        
         function toggleComments(postId) {
             var commentsBox = document.getElementById('comments-' + postId);
             if (commentsBox.style.display === 'none') {
