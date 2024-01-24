@@ -13,7 +13,7 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
-// Prevent user from accessing page without logging in
+// Prevent user from accessing the page without logging in
 if (!isset($_SESSION['username'])) {
     header("Location: officerlogin.html");
     exit();
@@ -23,11 +23,11 @@ if (!isset($_SESSION['username'])) {
 function updateStatus($complaintId, $status)
 {
     global $conn;
-    $complaintId = mysqli_real_escape_string($conn, $complaintId);
-    $status = mysqli_real_escape_string($conn, $status);
-
-    $updateQuery = "UPDATE complaints SET status = '$status' WHERE complaint_id = '$complaintId'";
-    $result = mysqli_query($conn, $updateQuery);
+    $updateQuery = "UPDATE complaints SET status = ? WHERE complaint_id = ?";
+    $stmt = mysqli_prepare($conn, $updateQuery);
+    mysqli_stmt_bind_param($stmt, 'ss', $status, $complaintId);
+    $result = mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 
     return $result;
 }
@@ -36,16 +36,17 @@ function updateStatus($complaintId, $status)
 function deleteComplaint($complaintId)
 {
     global $conn;
-    $complaintId = mysqli_real_escape_string($conn, $complaintId);
-
-    $deleteQuery = "DELETE FROM complaints WHERE complaint_id = '$complaintId'";
-    $result = mysqli_query($conn, $deleteQuery);
+    $deleteQuery = "DELETE FROM complaints WHERE complaint_id = ?";
+    $stmt = mysqli_prepare($conn, $deleteQuery);
+    mysqli_stmt_bind_param($stmt, 's', $complaintId);
+    $result = mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 
     return $result;
 }
 
-
-function sendEmail($to, $subject, $message) {
+function sendEmail($to, $subject, $message)
+{
     $headers = "From: s.kenchem@gmail.com\r\n";
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
@@ -53,15 +54,77 @@ function sendEmail($to, $subject, $message) {
     return mail($to, $subject, $message, $headers);
 }
 
-
-function getComplaintDetails($complaintId) {
+function getComplaintDetails($complaintId)
+{
     global $conn;
-    $complaintId = mysqli_real_escape_string($conn, $complaintId);
+    $query = "SELECT * FROM complaints WHERE complaint_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 's', $complaintId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $complaintDetails = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt);
 
-    $query = "SELECT * FROM complaints WHERE complaint_id = '$complaintId'";
-    $result = mysqli_query($conn, $query);
-    return mysqli_fetch_assoc($result);
+    return $complaintDetails;
 }
+
+// Handle form submissions
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+        $search = mysqli_real_escape_string($conn, $_GET['search']);
+
+        $query = "SELECT * FROM complaints WHERE 
+            LOWER(complaint_id) LIKE LOWER(?) OR
+            LOWER(userid) LIKE LOWER(?) OR
+            LOWER(city) LIKE LOWER(?) OR
+            LOWER(name) LIKE LOWER(?) OR
+            LOWER(email) LIKE LOWER(?) OR
+            LOWER(id_passport) LIKE LOWER(?) OR
+            LOWER(phone) LIKE LOWER(?) OR
+            LOWER(address) LIKE LOWER(?) OR
+            LOWER(issue_type) LIKE LOWER(?) OR
+            LOWER(issue) LIKE LOWER(?) OR
+            LOWER(sub_issues) LIKE LOWER(?) OR
+            LOWER(if_choice_is_other) LIKE LOWER(?) OR
+            LOWER(date_created) LIKE LOWER(?) OR
+            LOWER(city) LIKE LOWER(?)"; 
+
+$types = str_repeat('s', 14); 
+$stmt = mysqli_prepare($conn, $query);
+
+if ($stmt) {
+    $params = array_fill(0, 14, "%$search%"); 
+
+    
+    $bind_params = array(&$stmt, &$types);
+    foreach ($params as &$param) {
+        $bind_params[] = &$param;
+    }
+
+
+    call_user_func_array('mysqli_stmt_bind_param', $bind_params);
+
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $complaints = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    mysqli_stmt_close($stmt);
+}
+
+    } else {
+  
+        $query = "SELECT * FROM complaints";
+        $result = mysqli_query($conn, $query);
+
+
+        $complaints = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $complaints[] = $row;
+        }
+    }
+}
+
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -70,35 +133,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $status = $_POST['status'];
         updateStatus($complaintId, $status);
 
-        // Get complaint details
+       
         $complaintDetails = getComplaintDetails($complaintId);
 
-        
         $to = $complaintDetails['email'];
         $subject = "Update on your complaint #" . $complaintDetails['complaint_id'];
         $message = "Hello,<br><br>Your complaint with ID #" . $complaintDetails['complaint_id'] . " has been updated.<br><br>New Status: " . $status . "<br><br>Additional Details: " . $complaintDetails['issue'] . "<br><br><b>Please do not reply to this email as it is automatically generated.<b>";
 
-        
         $emailSent = sendEmail($to, $subject, $message);
 
         if ($emailSent) {
-            
             echo "Email sent successfully.";
         } else {
-            
             echo "Error sending email.";
         }
     } elseif (isset($_POST['delete_complaint']) && isset($_POST['complaint_id'])) {
         $complaintId = $_POST['complaint_id'];
         deleteComplaint($complaintId);
     }
-}
-
-$query = "SELECT * FROM complaints";
-$result = mysqli_query($conn, $query);
-$complaints = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $complaints[] = $row;
 }
 ?>
 
@@ -123,7 +175,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 .navbar a {
     color: white;
     text-align: center;
-    padding: 14px 10px; /* Adjust padding for top/bottom and left/right */
+    padding: 14px 10px; 
     text-decoration: none;
     margin-right: 250px;
     margin-left: 10px;
@@ -151,9 +203,8 @@ while ($row = mysqli_fetch_assoc($result)) {
     </nav>
 </div>
 
-
-    <div class="container mt-4">
-        <h1>Officer Dashboard</h1>
+<div class="container mt-4">
+    <h1>Officer Dashboard</h1>
     <form action="officerDashboard.php" method="get" class="mb-3" >
         <div class="form-group">
             <!--<label for="search">Search Complaint or User by ID or Locality:</label>-->
@@ -163,29 +214,29 @@ while ($row = mysqli_fetch_assoc($result)) {
     </form>
 
     <table class="table table-bordered table-striped mt-4" style="font-size: small;">
-            <thead>
+        <thead>
+            <tr>
+                <th>Complaint ID</th>
+                <th>User ID</th>
+                <th>Full Name</th>
+                <th>Email Address</th>
+                <th>ID/Passport</th>
+                <th>Phone Number</th>
+                <th>Exact Address</th>
+                <th>Locality</th>
+                <th>Issue Type</th>
+                <th>Issue</th>
+                <th>Sub-Issue</th>
+                <th>If sub issue is other</th>
+                <th>Image of Complaint</th>
+                <th>Date and Time</th>
+                <th>Update Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($complaints as $complaint): ?>
                 <tr>
-                    <th>Complaint ID</th>
-                    <th>User ID</th>
-                    <th>Full Name</th>
-                    <th>Email Address</th>
-                    <th>ID/Passport</th>
-                    <th>Phone Number</th>
-                    <th>Exact Address</th>
-                    <th>Locality</th>
-                    <th>Issue Type</th>
-                    <th>Issue</th>
-                    <th>Sub-Issue</th>
-                    <th>If sub issue is other</th>
-                    <th>Image of Complaint</th>
-                    <th>Date and Time</th>
-                    <th>Update Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($complaints as $complaint): ?>
-                    <tr>
                     <td><?php echo $complaint['complaint_id']; ?></td>
                     <td><?php echo $complaint['userid']; ?></td>
                     <td><?php echo $complaint['name']; ?></td>
@@ -201,16 +252,16 @@ while ($row = mysqli_fetch_assoc($result)) {
                     <td><img src="<?php echo $complaint['image_path']; ?>" alt="Complaint Image" width="150px" height="85px"></td>
                     <td><?php echo $complaint['date_created']; ?></td>
                     <td>
-                    <form action="officerDashboard.php" method="post">
-                        <input type="hidden" name="complaint_id" value="<?php echo $complaint['complaint_id']; ?>">
-                        <select class="form-control status-select" name="status">
-                            <option value="received" <?php if ($complaint['status'] === 'received') echo 'selected'; ?>>Received</option>
-                            <option value="pending" <?php if ($complaint['status'] === 'pending') echo 'selected'; ?>>Pending</option>
-                            <option value="underway" <?php if ($complaint['status'] === 'underway') echo 'selected'; ?>>Underway</option>
-                            <option value="resolved" <?php if ($complaint['status'] === 'resolved') echo 'selected'; ?>>Resolved</option>
-                        </select>
-                        <input type="submit" name="update_status" value="Update" class="btn btn-primary btn-sm">
-                    </form>
+                        <form action="officerDashboard.php" method="post">
+                            <input type="hidden" name="complaint_id" value="<?php echo $complaint['complaint_id']; ?>">
+                            <select class="form-control status-select" name="status">
+                                <option value="received" <?php if ($complaint['status'] === 'received') echo 'selected'; ?>>Received</option>
+                                <option value="pending" <?php if ($complaint['status'] === 'pending') echo 'selected'; ?>>Pending</option>
+                                <option value="underway" <?php if ($complaint['status'] === 'underway') echo 'selected'; ?>>Underway</option>
+                                <option value="resolved" <?php if ($complaint['status'] === 'resolved') echo 'selected'; ?>>Resolved</option>
+                            </select>
+                            <input type="submit" name="update_status" value="Update" class="btn btn-primary btn-sm">
+                        </form>
                     </td>
                     <td>
                         <form action="officerDashboard.php" method="post">
@@ -218,9 +269,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                             <input type="submit" name="delete_complaint" value="Delete" class="btn btn-danger btn-sm">
                         </form>
                     </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
     </table>
 </div>
 </body>
