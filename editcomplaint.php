@@ -166,12 +166,16 @@
                     <small id="imageSize" class="form-text text-center" style="color:red">Maximum image size is 5MB</small>
                     <small id="imageType" class="form-text text-center" style="color: red;">Only JPG, JPEG, PNG & GIF files are allowed</small>
                 </div>
+                
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
                 <div class="text-center">
                     <a href="mycomplaints.php" class="btn btn-secondary" style="margin-top: 5px;">Cancel Edit</a>
                 </div> 
+                <!-- Add this hidden input field after the form tag -->
+<input type="hidden" name="existingImages" value="<?php echo implode(',', $complaint['image_path']); ?>">
+
             </form>
         </div>
 <?php

@@ -160,8 +160,13 @@
         echo '<td>' . $complaint["city"] . '</td>';
         echo '<td>' . $complaint["issue_type"] . '</td>';
         echo '<td>' . $complaint["issue"] . '</td>';
-        echo '<td><img src="' . $complaint["image_path"] . '" alt="Complaint Image" width="200px" height="100px"></td>';
-        echo '<td>' . $complaint["date_created"] . '</td>';
+        $imagesArray = explode(',', $complaint["image_path"]);
+        echo '<td>';
+        foreach ($imagesArray as $imagePath) {
+            echo '<img src="' . $imagePath . '" alt="Complaint Image" width="200px" height="100px">';
+        }
+        echo '</td>';
+                echo '<td>' . $complaint["date_created"] . '</td>';
         echo '<td>' . $complaint["status"] . '</td>';
         // Buttons inside the Actions column
         echo '<td>';
