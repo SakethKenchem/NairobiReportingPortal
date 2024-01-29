@@ -8,7 +8,7 @@
         .alert {
             max-width: 500px;
             margin-top: 20px;
-            /*center the alert*/
+            
             margin-left: auto;
             margin-right: auto;
         }
@@ -26,33 +26,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $description = $_POST['description'];
         $location = $_POST['location'];
 
-        // Validate and sanitize the data (you should implement proper validation)
         $description = htmlspecialchars($description);
         $location = htmlspecialchars($location);
 
-        // Database connection details
+        
         $servername = "localhost";
         $username = "root";
         $password = "";
         $dbname = "isp";
 
-        // Create a database connection
+        
         $conn = new mysqli($servername, $username, $password, $dbname);
 
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        // Handle file upload
+        
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = "uploads/"; // Directory to store uploaded files
+            $uploadDir = "uploads/"; 
             $uploadedFile = $_FILES['image']['tmp_name'];
             $fileName = basename($_FILES['image']['name']);
             $targetPath = $uploadDir . $fileName;
 
-            // Move the uploaded file to the target directory
+            
             if (move_uploaded_file($uploadedFile, $targetPath)) {
-                // Update the image path in the database
+                
                 $sql = "UPDATE posts SET description = '$description', location = '$location', image_path = '$targetPath' WHERE postid = '$postid'";
 
                 if ($conn->query($sql) === TRUE) {
@@ -66,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "Error uploading file.";
             }
         } else {
-            // If no new image was uploaded, update only description and location
+            
             $sql = "UPDATE posts SET description = '$description', location = '$location' WHERE postid = '$postid'";
 
             if ($conn->query($sql) === TRUE) {
@@ -78,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        // Close the database connection
+        
         $conn->close();
     } else {
         echo "Invalid data received from the form.";
