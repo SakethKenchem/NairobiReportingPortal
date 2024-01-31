@@ -50,7 +50,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 <input type="password" class="form-control" id="security_phrase" name="security_phrase" placeholder="Security Phrase" required>
             </div>
             <button type="submit" class="btn btn-primary" id="verifyBtn">Verify</button>
+            
+            <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" style="display: none;" id="spinner"></div>
+            </div>
         </form>
     </div>
 
