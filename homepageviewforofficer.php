@@ -124,8 +124,8 @@
                 ?>
 
                 <!--<form action="submit_comment.php" method="post">
-                    <input type="hidden" name="postid" value="<?php echo $row["postid"]; ?>">
-                    <input type="hidden" name="username" value="<?php echo $_SESSION["username"]; ?>">
+                    <input type="hidden" name="postid" value="<?php // echo $row["postid"]; ?>">
+                    <input type="hidden" name="username" value="<?php //echo $_SESSION["username"]; ?>">
                     <div class="form-group">
                         <label for="comment">Your Comment:</label>
                         <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
