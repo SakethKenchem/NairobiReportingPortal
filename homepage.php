@@ -312,7 +312,7 @@ if ($totalPosts > 0) {
     if ($currentPage < $totalPages) {
         echo '<li class="page-item"><a class="page-link" href="homepage.php?page=' . ($currentPage + 1) . '">Next</a></li></ul></nav>';
     } else {
-        // Ensure the "Next" link is disabled on the last page
+        // Ensure the "Next" link is disabled on the last page  
         echo '<li class="page-item disabled"><span class="page-link">Next</span></li></ul></nav>';
     }
 }
