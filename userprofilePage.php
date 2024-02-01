@@ -79,10 +79,16 @@
     </div>
 </nav>
 <div>
-    <p class="p"><b style="color: red;">Note:</b> You are not allowed to change your Username and National ID. If you wish to change it then you must contact the admin <a href="Error_or_Suggestion_Portal.php">here</a></p>
+    <p class="p"><b style="color: red;">Note:</b> You are not allowed to change your Username and National ID. If you wish to change it then you must contact the admin 
+        <a class="icon-link icon-link-hover" href="Error_or_Suggestion_Portal.php">
+            here
+            <svg class="bi" aria-hidden="true"><use xlink:href="#arrow-right"></use></svg>
+        </a>
+    </p>
 </div>
 <div class="container">
     <h2 class="my-4">Current User Details</h2>
+    
     <?php
     session_start();
     if (!isset($_SESSION['loggedin']) || empty($_SESSION['loggedin'])) {

@@ -9,7 +9,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     exit;
 }
 
-
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -18,6 +17,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 $username = $_SESSION['username'];
 
+// Assuming this is where you retrieve posts from the database
 $result = $conn->query("SELECT * FROM posts ORDER BY postid DESC");
 
 function getSeverityLevel($votes)
@@ -31,14 +31,12 @@ function getSeverityLevel($votes)
     } else {
         return "Not High Enough so not Urgent!";
     }
-
 }
 
 if (isset($_POST["search"])) {
     $search = $_POST["search"];
-    $search = $conn->real_escape_string($search); 
+    $search = $conn->real_escape_string($search);
 
-    
     $result = $conn->query("SELECT * FROM posts 
                             WHERE username LIKE '%$search%' 
                             OR location LIKE '%$search%' 
@@ -47,7 +45,7 @@ if (isset($_POST["search"])) {
                             OR votes >= 135 AND votes <= 150 AND description LIKE '%$search%'
                             ORDER BY postid DESC");
 } else {
-    
+
     $result = $conn->query("SELECT * FROM posts ORDER BY postid DESC");
 }
 ?>
@@ -70,7 +68,7 @@ if (isset($_POST["search"])) {
             flex-direction: column;
             align-items: center;
             padding-top: 20px;
-            margin-bottom: 100px; 
+            margin-bottom: 100px;
         }
 
         .post-container {
@@ -78,8 +76,8 @@ if (isset($_POST["search"])) {
             padding: 10px;
             margin-top: 50px;
             border: 1px solid #ccc;
-            margin-bottom: 20px; 
-            z-index: 1; 
+            margin-bottom: 20px;
+            z-index: 1;
         }
 
         .post-container img {
@@ -114,7 +112,7 @@ if (isset($_POST["search"])) {
         }
 
         .greeting-container {
-            animation: slideLeftToRight 1.15s forwards; 
+            animation: slideLeftToRight 1.15s forwards;
             margin-top: 5px;
             margin-right: 1000px;
             margin-left: 20px;
@@ -122,12 +120,12 @@ if (isset($_POST["search"])) {
 
         @keyframes slideLeftToRight {
             from {
-                transform: translateX(-100%); 
+                transform: translateX(-100%);
                 opacity: 0;
             }
 
             to {
-                transform: translateX(0); 
+                transform: translateX(0);
                 opacity: 1;
             }
         }
@@ -135,23 +133,23 @@ if (isset($_POST["search"])) {
         .greeting-font {
             font-size: x-large;
         }
-
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-dark container-fluid justify-content-between">
         <a class="navbar-brand" href="homepage.php">
-            <img src="Coat_of_Arms_of_Nairobi.svg.png" width="30" height="30" class="d-inline-block align-top1"
-                alt="" style="margin-left: 10px;">
+            <img src="Coat_of_Arms_of_Nairobi.svg.png" width="30" height="30"
+                class="d-inline-block align-top1" alt="" style="margin-left: 10px;">
             Nairobi Reporting Portal
         </a>
         <div class="navbar-links">
             <a class="nav-link" href="complaintForm.php" style="color: white;">Complaint Form</a>
             <a class="nav-link" href="postCreate.php" style="color: white;">Create Post</a>
-            
+
             <div class="dropdown" style="margin-top: -4px;">
-                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     User Profile
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -163,12 +161,11 @@ if (isset($_POST["search"])) {
                     <a class="dropdown-item" href="mycomments.php">My Comments</a>
                 </div>
             </div>
-            
+
             <a class="nav-link" href="about_us.html" style="color: white;">About Us</a>
             <a class="nav-link" href="logout.php" style="color: white;">Logout</a>
         </div>
     </nav>
-
 
     <!-- Search bar -->
     <form action="homepage.php" method="POST" style="margin-top: 10px; margin-left: 1050px; height: 1px">
@@ -183,13 +180,13 @@ if (isset($_POST["search"])) {
         </div>
     </form>
 
-    <!--  greeting  -->
+    <!-- greeting -->
     <div class="greeting-container">
         <?php
         date_default_timezone_set('Africa/Nairobi');
         $time = date("H");
         if ($time < "12") {
-            echo "<h3 class='greeting-font'>Good Morning  " . $username . "👋" ."</h3>";
+            echo "<h3 class='greeting-font'>Good Morning  " . $username . "👋" . "</h3>";
         } elseif ($time >= "12" && $time < "17") {
             echo "<h3 class='greeting-font'>Good Afternoon  " . $username . "👋" . "</h3>";
         } elseif ($time >= "17") {
@@ -202,76 +199,125 @@ if (isset($_POST["search"])) {
 
     <h4 style="margin-top: 3px; margin-right: 1058px; margin-left: 19.7px;">Here are the latest posts:</h4>
 
-    <?php while ($row = $result->fetch_assoc()) { ?>
-        <?php
-        $postId = $row["postid"];
-        $hasVoted = isset($_SESSION["voted_posts"][$postId]);
-        $upvoteDisabled = $hasVoted ? "disabled" : "";
-        $retractVoteDisabled = $hasVoted ? "" : "disabled";
-        ?>
+    <?php
+    $postsPerPage = 3;
+    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+    $startIndex = ($currentPage - 1) * $postsPerPage;
+    $endIndex = $startIndex + $postsPerPage;
+    $totalPosts = $result->num_rows;
 
-        <div class="post-container card" style="margin-top: -20px; margin-bottom: 40px;">
-            <p style="font-size: small;"><b>Uploaded:</b> <?php echo $row["datecreated"]; ?></p>
-            <span class="card-title" style="font-size: smaller;"><b>Username: </b><?php echo $row["username"]; ?></span>
+    while ($row = $result->fetch_assoc()) {
+        if ($startIndex <= 0) {
+    ?>
+            <div class="post-container card" style="margin-top: -20px; margin-bottom: 40px;">
+                <p style="font-size: small;"><b>Uploaded:</b> <?php echo $row["datecreated"]; ?></p>
+                <span class="card-title" style="font-size: smaller;"><b>Username: </b><?php echo $row["username"]; ?></span>
 
-            <p style="font-size: smaller; display: none;"><b>Post ID:</b> <?php echo $row["postid"]; ?></p>
+                <p style="font-size: smaller; display: none;"><b>Post ID:</b> <?php echo $row["postid"]; ?></p>
 
-            <img src="<?php echo $row["image_path"]; ?>" class="card-img-top" alt="Post Image">
+                <img src="<?php echo $row["image_path"]; ?>" class="card-img-top" alt="Post Image">
 
-            <div class="card-body">
+                <div class="card-body">
 
-                <p class="card-text" style="margin-top: 0px; font-size:small"><b>Location:</b> <?php echo $row["location"]; ?></p>
-                <p class="card-text" style="font-size: small;"><b>Description:</b> <?php echo $row["description"]; ?></p>
+                    <p class="card-text" style="margin-top: 0px; font-size:small"><b>Location:</b> <?php echo $row["location"]; ?></p>
+                    <p class="card-text" style="font-size: small;"><b>Description:</b> <?php echo $row["description"]; ?></p>
 
-                <!-- Upvote and downvote -->
-                <p class="card-text">Votes: <?php echo $row["votes"]; ?></p>
-                <div class="row">
-                    <div class="col">
-                        <form action="vote.php" method="POST">
-                            <input type="hidden" name="postid" value="<?php echo $postId; ?>">
-                            <input type="submit" name="upvote" class="btn btn-primary" value="Vote"
-                                <?php echo $upvoteDisabled; ?>>
-                        </form>
-                    </div>
-                    <div class="col" style="margin-right: 127px;">
-                        <form action="vote.php" method="POST">
-                            <input type="hidden" name="postid" value="<?php echo $postId; ?>">
-                            <input type="submit" name="retract_vote" class="btn btn-warning" value="Retract Vote"
-                                <?php echo $retractVoteDisabled; ?>>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Severity level where security: is bold -->
-                <p class="card-text" style="font-size: smaller;"><b>Severity and Urgency:</b>
-                    <?php echo getSeverityLevel($row['votes']); ?>
-                </p>
-
-                <div class="comments-section" style="margin-top: 5px;">
-                    
-                    <button class="btn btn-secondary" onclick="toggleComments(<?php echo $row['postid']; ?>)">Comments</button>
-                    <div id="comments-<?php echo $row['postid']; ?>" class="comments-box" style="display: none;">
+             <!-- Upvote and downvote -->
+             <p class="card-text">Votes: <?php echo $row["votes"]; ?></p>
+            <div class="row">
+                <div class="col">
+                    <form action="vote.php" method="POST">
+                        <input type="hidden" name="postid" value="<?php echo $row["postid"]; ?>">
                         <?php
-                        $post_id = $row["postid"];
-                        $comments_result = $conn->query("SELECT * FROM comments WHERE postid = $post_id ORDER BY comment_id ASC");
-                        while ($comment_row = $comments_result->fetch_assoc()) {
-                            echo '<p><b>' . $comment_row["username"] . ':</b> ' . $comment_row["comment"] . '</p>';
-                        }
+                        $postId = $row["postid"];
+                        $hasVoted = isset($_SESSION["voted_posts"][$postId]);
+                        $upvoteDisabled = $hasVoted ? "disabled" : "";
                         ?>
-                        <form action="submit_comment.php" method="post">
-                            <input type="hidden" name="postid" value="<?php echo $row["postid"]; ?>">
-                            <input type="hidden" name="username" value="<?php echo $_SESSION["username"]; ?>">
-                            <div class="form-group">
-                                <label for="comment">Your Comment:</label>
-                                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-success" style="margin-top: 5px;">Submit Comment</button>
-                        </form>
+                        <input type="submit" name="upvote" class="btn btn-primary" value="Vote"
+                            <?php echo $upvoteDisabled; ?>>
+                    </form>
+                </div>
+                <div class="col" style="margin-right: 127px;">
+                    <form action="vote.php" method="POST">
+                        <input type="hidden" name="postid" value="<?php echo $row["postid"]; ?>">
+                        <?php
+                        $retractVoteDisabled = $hasVoted ? "" : "disabled";
+                        ?>
+                        <input type="submit" name="retract_vote" class="btn btn-warning" value="Retract Vote"
+                            <?php echo $retractVoteDisabled; ?>>
+                    </form>
+                </div>
+            </div>
+
+                    <!-- Severity level where security: is bold -->
+                    <p class="card-text" style="font-size: smaller;"><b>Severity and Urgency:</b>
+                        <?php echo getSeverityLevel($row['votes']); ?>
+                    </p>
+
+                    <div class="comments-section" style="margin-top: 5px;">
+
+                        <button class="btn btn-secondary" onclick="toggleComments(<?php echo $row['postid']; ?>)">Comments</button>
+                        <div id="comments-<?php echo $row['postid']; ?>" class="comments-box" style="display: none;">
+                            <?php
+                            $post_id = $row["postid"];
+                            $comments_result = $conn->query("SELECT * FROM comments WHERE postid = $post_id ORDER BY comment_id ASC");
+                            while ($comment_row = $comments_result->fetch_assoc()) {
+                                echo '<p><b>' . $comment_row["username"] . ':</b> ' . $comment_row["comment"] . '</p>';
+                            }
+                            ?>
+                            <form action="submit_comment.php" method="post">
+                                <input type="hidden" name="postid" value="<?php echo $row["postid"]; ?>">
+                                <input type="hidden" name="username" value="<?php echo $_SESSION["username"]; ?>">
+                                <div class="form-group">
+                                    <label for="comment">Your Comment:</label>
+                                    <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-success" style="margin-top: 5px;">Submit Comment</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    <?php } ?>
+    <?php
+        }
+        $startIndex--;
+        if ($startIndex < 0) {
+            if (--$postsPerPage == 0) break;
+        }
+    }
+    ?>
+
+    <!-- Pagination -->
+<?php
+$postsPerPage = 5;
+$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+$startIndex = ($currentPage - 1) * $postsPerPage;
+$endIndex = $startIndex + $postsPerPage;
+$totalPosts = $result->num_rows;
+
+if ($totalPosts > 0) {
+    $totalPages = ceil($totalPosts / $postsPerPage);
+
+    // Previous Page
+    if ($currentPage > 1) {
+        echo '<nav aria-label="Page navigation example" style="margin-top: 20px;"><ul class="pagination"><li class="page-item"><a class="page-link" href="homepage.php?page=' . ($currentPage - 1) . '">Previous</a></li>';
+    }
+
+    // Page Numbers
+    for ($i = 1; $i <= $totalPages; $i++) {
+        echo '<li class="page-item ' . ($i == $currentPage ? "active" : "") . '"><a class="page-link" href="homepage.php?page=' . $i . '">' . $i . '</a></li>';
+    }
+
+    // Next Page
+    if ($currentPage < $totalPages) {
+        echo '<li class="page-item"><a class="page-link" href="homepage.php?page=' . ($currentPage + 1) . '">Next</a></li></ul></nav>';
+    } else {
+        // Ensure the "Next" link is disabled on the last page
+        echo '<li class="page-item disabled"><span class="page-link">Next</span></li></ul></nav>';
+    }
+}
+?>
+
 
     <!-- Scroll to top button -->
     <button onclick="topFunction()" id="myBtn" title="Go to top"
@@ -279,7 +325,6 @@ if (isset($_POST["search"])) {
 
     <script src="dark-mode.js"></script>
     <script>
-        
         var mybutton = document.getElementById("myBtn");
 
         // When the user scrolls down 20px from the top of the document, show the button
@@ -295,13 +340,11 @@ if (isset($_POST["search"])) {
             }
         }
 
-        
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
 
-        
         function toggleComments(postId) {
             var commentsBox = document.getElementById('comments-' + postId);
             if (commentsBox.style.display === 'none') {
@@ -315,7 +358,7 @@ if (isset($_POST["search"])) {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
 </body>
 
 </html>
