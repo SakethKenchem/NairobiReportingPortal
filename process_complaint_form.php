@@ -1,4 +1,14 @@
 <?php
+    session_start();
+    
+    if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+        echo '<div class="alert alert-danger mt-4">Please log in to view your user profile.<a href="residentlogin.html">Click here to login</a></div>';
+        exit;
+    }  
+    if (!isset($_SESSION['userid']) || empty($_SESSION['userid'])) {
+        echo '<div class="alert alert-danger mt-4">Please log in to view your user profile.<a href="residentlogin.html">Click here to login</a></div>';
+        exit();
+    }
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -22,18 +32,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $otherIssueDiv = $_POST["if_choice_is_other"];
     $issue_type = $_POST["issue_type"];
 
-    // Upload images code block
-    $targetDir = "uploads/"; // folder to store the uploaded images
+    
+    $targetDir = "uploads/"; 
     $uploadedFiles = [];
     $uploadStatus = true;
 
-    if (!empty($_FILES['images']['name'][0])) {
-        if (is_array($_FILES['images']['name'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        date_default_timezone_set('Africa/Nairobi');
+        $currentDateTime = date('Y-m-d H:i:s');
+
+        
+        $sql = "INSERT INTO complaints (userid, name, email, id_passport, phone, address, city, issue, sub_issues, if_choice_is_other, issue_type, date_created, status)
+                VALUES ('$userid', '$name', '$email', '$id_passport', '$phone', '$address', '$city', '$issue', '$sub_issues', '$otherIssueDiv', '$issue_type', '$currentDateTime', 'Pending')";
+
+        if ($conn->query($sql) === TRUE) {
+            $complaintId = $conn->insert_id; 
+
+            
+            $stmt = $conn->prepare("INSERT INTO complaint_images (file_path, complaint_id) VALUES (?, ?)");
+
             foreach ($_FILES['images']['name'] as $key => $name) {
                 $targetFilePath = $targetDir . basename($name);
                 $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
 
-                // Check if the file size is within the allowed limit (10MB)
+                
                 if ($_FILES['images']['size'][$key] > 10 * 1024 * 1024) {
                     echo '<script>alert("File size exceeds the maximum allowed size of 10MB."); window.location.href = "complaintForm.php";</script>';
                     $uploadStatus = false;
@@ -42,36 +64,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 if (move_uploaded_file($_FILES["images"]["tmp_name"][$key], $targetFilePath)) {
                     $uploadedFiles[] = $targetFilePath;
+
+                    
+                    $stmt->bind_param("si", $targetFilePath, $complaintId);
+                    $stmt->execute();
                 } else {
                     echo "Error uploading file(s).";
                     $uploadStatus = false;
                     break;
                 }
             }
-        } else {
-            $targetFilePath = $targetDir . basename($_FILES["images"]["name"]);
-            $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
 
-            // Check if the file size is within the allowed limit (10MB)
-            if ($_FILES['images']['size'] > 10 * 1024 * 1024) {
-                echo '<script>alert("File size exceeds the maximum allowed size of 10MB."); window.location.href = "complaintForm.php";</script>';
-                $uploadStatus = false;
-            } elseif (move_uploaded_file($_FILES["images"]["tmp_name"], $targetFilePath)) {
-                $uploadedFiles[] = $targetFilePath;
-            } else {
-                echo "Error uploading file.";
-                $uploadStatus = false;
-            }
-        }
-    }
+            $stmt->close();
 
-    if ($uploadStatus) {
-        date_default_timezone_set('Africa/Nairobi');
-        $currentDateTime = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO complaints (userid, name, email, id_passport, phone, address, city, issue, sub_issues, if_choice_is_other, issue_type, image_path, date_created)
-                VALUES ('$userid', '$name', '$email', '$id_passport', '$phone', '$address', '$city', '$issue', '$sub_issues', '$otherIssueDiv', '$issue_type', '" . implode(",", $uploadedFiles) . "', '$currentDateTime')";
-
-        if ($conn->query($sql) === TRUE) {
+            // Display success message or redirect as needed
             echo '<!DOCTYPE html>
             <html lang="en">
             <head>
@@ -121,7 +127,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </script>
             </body>
             </html>
-                      
             ';
             exit;
         } else {
@@ -129,5 +134,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
 $targetDir = "uploads/";
 ?>
