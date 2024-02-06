@@ -218,7 +218,7 @@
         
         <div class="col-12">
             <label for="imageInput" class="form-label">Images:</label>
-            <input type="file" class="form-control border" id="imageInput" name="images" accept="image/*" multiple onchange="previewImages(event)" required>
+            <input type="file" class="form-control border" id="imageInput" name="images[]" accept="image/*" multiple onchange="previewImages(event)" required multiple>
             <div id="imagePreviewContainer" class="d-flex flex-wrap"></div>
             <small id="imageSize" class="form-text text-center" style="color:red">Maximum image file size is 10MB</small><br>
             <small id="imageType" class="form-text text-center" style="color: red;">Only JPG, JPEG, PNG & GIF files are allowed</small><br>
