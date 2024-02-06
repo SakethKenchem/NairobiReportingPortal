@@ -139,7 +139,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <form method="POST" action="uploadPost.php" enctype="multipart/form-data" class="border p-4 rounded bg-light">
         <div class="form-group">
             <label for="image">Choose an image:</label>
-            <input type="file" id="image" name="image" required class="form-control-file">
+            <input type="file" id="images" name="images[]" required class="form-control-file" multiple>
         </div>
         <div>
             <label for="username">Username:</label>
