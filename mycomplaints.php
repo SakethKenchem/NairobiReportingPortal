@@ -208,7 +208,7 @@ foreach ($complaints as $complaint) {
         }
     } else {
         // Handle the case when "image_paths" is empty or not present
-        echo 'No images available';
+        echo 'No images available!';
     }
 
     echo '</td>';
