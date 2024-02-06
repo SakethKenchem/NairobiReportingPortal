@@ -52,7 +52,7 @@
     session_start();
     
     if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-        echo '<div class="alert alert-danger mt-4">Please log in to view your user profile.<a href="residentlogin.html">Click here to login</a></div>';
+        echo '<div class="alert alert-danger mt-4">Please log in to view your user profile!.<a href="residentlogin.html">Click here to login</a></div>';
         exit;
     }  
     if (!isset($_SESSION['userid']) || empty($_SESSION['userid'])) {
