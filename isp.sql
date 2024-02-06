@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2024 at 06:41 PM
+-- Generation Time: Feb 06, 2024 at 12:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,13 +55,6 @@ CREATE TABLE `comments` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `comments`
---
-
-INSERT INTO `comments` (`comment_id`, `postid`, `userid`, `username`, `comment`, `timestamp`) VALUES
-(8, 9, 1, 'Saketh Kenchem', 'hi', '2023-11-15 06:29:34');
-
 -- --------------------------------------------------------
 
 --
@@ -81,7 +74,6 @@ CREATE TABLE `complaints` (
   `issue` text NOT NULL,
   `sub_issues` varchar(255) NOT NULL,
   `if_choice_is_other` varchar(255) NOT NULL,
-  `image_path` text DEFAULT NULL,
   `date_created` datetime NOT NULL,
   `status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -90,10 +82,30 @@ CREATE TABLE `complaints` (
 -- Dumping data for table `complaints`
 --
 
-INSERT INTO `complaints` (`complaint_id`, `userid`, `name`, `email`, `id_passport`, `phone`, `address`, `city`, `issue_type`, `issue`, `sub_issues`, `if_choice_is_other`, `image_path`, `date_created`, `status`) VALUES
-(1, 1, 'Saketh Kenchem', 's.kenchem@gmail.com', 'V3735185', '0112716955', '07, Jubilee Apartments, Mpaka Road', 'Westlands', 'Roads and Related Issues', 'there are very many potholes', 'Potholes', '', 'uploads/potholes on road after rain.jpg', '2023-11-17 17:25:35', 'received'),
-(2, 1, 'Saketh Kenchem', 's.kenchem@gmail.com', 'V3735185', '0112716955', '07, Jubilee Apartments, Mpaka Road', 'Parklands', 'Roads and Related Issues', 'there are water leakage', 'Water Leakage', '', 'uploads/broken pipe.jpg', '2023-11-17 17:30:42', 'underway'),
-(3, 1, 'Saketh Kenchem', 'saketh.kenchem@strathmore.edu', 'V3735185', '0112716955', '07, Jubilee Apartments, Mpaka Road', 'Githurai', 'Water and Sanitation', 'there is water leakage', 'Water Leakage', '', 'uploads/broken pipe.jpg', '2023-11-18 09:10:30', 'underway');
+INSERT INTO `complaints` (`complaint_id`, `userid`, `name`, `email`, `id_passport`, `phone`, `address`, `city`, `issue_type`, `issue`, `sub_issues`, `if_choice_is_other`, `date_created`, `status`) VALUES
+(3, 1, 'Saketh Kenchem', 's.kenchem@gmail.com', 'V3735185', '0112716955', 'sasasasa', 'Embakasi', 'Water and Sanitation', 'fffffffffggggggggggggggggggggggggggggg', 'Water Contamination', '', '2024-02-06 14:41:25', 'Pending');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `complaint_images`
+--
+
+CREATE TABLE `complaint_images` (
+  `image_id` int(11) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `complaint_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `complaint_images`
+--
+
+INSERT INTO `complaint_images` (`image_id`, `file_path`, `complaint_id`) VALUES
+(5, 'uploads/broken pipe.jpg', 3),
+(6, 'uploads/garbage on streets.jpg', 3),
+(7, 'uploads/no street lights.jpeg', 3),
+(8, 'uploads/potholes  on road after rain.jpg', 3);
 
 -- --------------------------------------------------------
 
@@ -123,7 +135,6 @@ INSERT INTO `officer_credentials` (`id`, `username`, `phonenumber`, `password`) 
 
 CREATE TABLE `posts` (
   `postid` int(50) NOT NULL,
-  `image_path` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `votes` int(250) DEFAULT 0,
   `comments` text DEFAULT '0',
@@ -138,8 +149,25 @@ CREATE TABLE `posts` (
 -- Dumping data for table `posts`
 --
 
-INSERT INTO `posts` (`postid`, `image_path`, `description`, `votes`, `comments`, `username`, `location`, `datecreated`, `severity`, `userid`) VALUES
-(9, 'postsImages/no street lights.jpeg', 'no street lights\r\n', 0, '1', 'Saketh Kenchem', 'Mpaka Road', '2023-11-14 20:42:58', '', 1);
+INSERT INTO `posts` (`postid`, `description`, `votes`, `comments`, `username`, `location`, `datecreated`, `severity`, `userid`) VALUES
+(9, 'no street lights\r\n', 0, '1', 'Saketh Kenchem', 'Mpaka Road', '2023-11-14 20:42:58', '', 1),
+(10, 'saaaaaaaaaa', 1, '0', 'Saketh Kenchem', 'saaaaaaaa', '2024-01-19 19:39:56', '', 1),
+(11, 'weeeeee', 0, '0', 'Saketh Kenchem', 'ewwwwww', '2024-02-01 09:16:15', '', 1),
+(12, 'ewwwwwwwwww', 0, '0', 'Saketh Kenchem', 'ewwwww', '2024-02-01 09:16:22', '', 1),
+(13, 'ttttttttttttttttttttttttttt', 0, '0', 'Saketh Kenchem', 'saaaaaaaa', '2024-02-01 09:18:45', '', 1),
+(14, 'ttttttttttttt', 0, '2', 'Saketh Kenchem', 'tttttttttt', '2024-02-01 09:18:52', '', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `post_images`
+--
+
+CREATE TABLE `post_images` (
+  `image_id` int(11) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `post_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -219,12 +247,29 @@ INSERT INTO `userloginhistory` (`id`, `userid`, `login_time`, `logout_time`) VAL
 (16, 1, '2023-11-30 13:58:02', '2023-12-09 18:51:46'),
 (17, 1, '2023-12-09 18:24:32', '2023-12-09 18:51:46'),
 (18, 1, '2023-12-09 18:51:52', '2023-12-09 19:00:17'),
-(19, 1, '2023-12-09 19:00:30', NULL),
-(20, 1, '2023-12-13 11:05:22', NULL),
-(21, 1, '2023-12-14 19:22:54', NULL),
-(22, 1, '2023-12-15 09:54:22', NULL),
-(23, 1, '2023-12-15 16:08:08', NULL),
-(24, 1, '2023-12-30 11:20:41', NULL);
+(19, 1, '2023-12-09 19:00:30', '2024-01-19 10:58:31'),
+(20, 1, '2023-12-13 11:05:22', '2024-01-19 10:58:31'),
+(21, 1, '2023-12-14 19:22:54', '2024-01-19 10:58:31'),
+(22, 1, '2023-12-15 09:54:22', '2024-01-19 10:58:31'),
+(23, 1, '2023-12-15 16:08:08', '2024-01-19 10:58:31'),
+(24, 1, '2023-12-30 11:20:41', '2024-01-19 10:58:31'),
+(25, 1, '2024-01-19 10:54:54', '2024-01-19 10:58:31'),
+(26, 1, '2024-01-19 17:28:58', '2024-01-31 15:37:26'),
+(27, 1, '2024-01-19 17:39:33', '2024-01-31 15:37:26'),
+(28, 1, '2024-01-29 08:52:29', '2024-01-31 15:37:26'),
+(29, 1, '2024-01-31 15:32:46', '2024-01-31 15:37:26'),
+(30, 1, '2024-01-31 15:37:48', '2024-01-31 15:44:21'),
+(31, 1, '2024-01-31 15:44:27', '2024-01-31 16:03:28'),
+(32, 1, '2024-01-31 18:51:34', '2024-01-31 18:56:52'),
+(33, 1, '2024-01-31 18:57:30', '2024-01-31 18:58:12'),
+(34, 1, '2024-01-31 18:58:52', '2024-01-31 19:00:24'),
+(35, 1, '2024-01-31 19:03:56', '2024-02-01 06:46:16'),
+(36, 1, '2024-02-01 06:24:37', '2024-02-01 06:46:16'),
+(37, 1, '2024-02-01 06:45:52', '2024-02-01 06:46:16'),
+(38, 1, '2024-02-01 06:47:19', '2024-02-03 10:41:10'),
+(39, 1, '2024-02-01 07:02:06', '2024-02-03 10:41:10'),
+(40, 1, '2024-02-03 10:30:16', '2024-02-03 10:41:10'),
+(41, 1, '2024-02-06 10:54:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -267,6 +312,13 @@ ALTER TABLE `complaints`
   ADD KEY `userid` (`userid`);
 
 --
+-- Indexes for table `complaint_images`
+--
+ALTER TABLE `complaint_images`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `complaint_images_ibfk_1` (`complaint_id`);
+
+--
 -- Indexes for table `officer_credentials`
 --
 ALTER TABLE `officer_credentials`
@@ -278,6 +330,13 @@ ALTER TABLE `officer_credentials`
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`postid`),
   ADD KEY `userid` (`userid`);
+
+--
+-- Indexes for table `post_images`
+--
+ALTER TABLE `post_images`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `post_id` (`post_id`);
 
 --
 -- Indexes for table `reports_to_admin`
@@ -321,13 +380,19 @@ ALTER TABLE `admin_credentials`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
   MODIFY `complaint_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `complaint_images`
+--
+ALTER TABLE `complaint_images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `officer_credentials`
@@ -339,7 +404,13 @@ ALTER TABLE `officer_credentials`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `postid` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `postid` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `post_images`
+--
+ALTER TABLE `post_images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `reports_to_admin`
@@ -357,7 +428,7 @@ ALTER TABLE `userlogincredentials`
 -- AUTO_INCREMENT for table `userloginhistory`
 --
 ALTER TABLE `userloginhistory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `verification_codes`
@@ -383,10 +454,22 @@ ALTER TABLE `complaints`
   ADD CONSTRAINT `fk_userid` FOREIGN KEY (`userid`) REFERENCES `userlogincredentials` (`userid`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `complaint_images`
+--
+ALTER TABLE `complaint_images`
+  ADD CONSTRAINT `complaint_images_ibfk_1` FOREIGN KEY (`complaint_id`) REFERENCES `complaints` (`complaint_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `posts`
 --
 ALTER TABLE `posts`
   ADD CONSTRAINT `fk_user_posts` FOREIGN KEY (`userid`) REFERENCES `userlogincredentials` (`userid`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `post_images`
+--
+ALTER TABLE `post_images`
+  ADD CONSTRAINT `post_images_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`postid`);
 
 --
 -- Constraints for table `userloginhistory`
