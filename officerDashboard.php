@@ -288,11 +288,11 @@ function getImagePaths($complaintId)
                 echo '</button>';
                 echo '</div>';
             } else {
-                // Display single image without carousel
+                
                 echo '<img src="' . $imagePaths[0]['file_path'] . '" alt="Complaint Image" width="50px" height="50px">';
             }
         } else {
-            // Handle the case when there are no images for the complaint
+            
             echo 'No images available!';
         }
         ?>
