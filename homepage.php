@@ -214,7 +214,7 @@ $endIndex = $startIndex + $postsPerPage;
 $totalPosts = $result->num_rows;
 
 while ($row = $result->fetch_assoc()) {
-    if ($startIndex >= 0) {
+    if ($startIndex <= 0) {
 ?>
         <div class="post-container card" style="margin-top: -20px; margin-bottom: 40px;">
             <p style="font-size: small;"><b>Uploaded:</b> <?php echo $row["datecreated"]; ?></p>
