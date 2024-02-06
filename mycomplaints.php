@@ -6,7 +6,9 @@
     <title>My Complaints</title>
     <link rel="icon" href="Coat_of_Arms_of_Nairobi.svg.png" type="image/icon type">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">    
+    <!-- Include Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
     <style>
         body {
             display: flex;
@@ -82,51 +84,67 @@
     </div>
 </nav>
 <?php
-    session_start();
+session_start();
     
-    if (!isset($_SESSION['userid']) || empty($_SESSION['userid'])) {
-        echo '<div class="alert alert-danger mt-4">Please log in to view your complaints.</div>';
-        exit(); 
+if (!isset($_SESSION['userid']) || empty($_SESSION['userid'])) {
+    echo '<div class="alert alert-danger mt-4">Please log in to view your complaints. <a href="residentlogin.html">Here</a></div>';
+    exit(); 
+}
+
+// this code fetches complaints for the current logged in user from the database
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "isp";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$userid = $_SESSION['userid'];
+
+$sql = "SELECT * FROM complaints WHERE userid = '$userid'";
+$result = $conn->query($sql);
+
+$complaints = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $complaints[] = $row;
     }
+}
 
-    // this code fetches complaints for the current logged in user from the database
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "isp";
+$sql = "SELECT complaints.*, GROUP_CONCAT(complaint_images.file_path) AS image_paths
+        FROM complaints
+        LEFT JOIN complaint_images ON complaints.complaint_id = complaint_images.complaint_id
+        WHERE complaints.userid = '$userid'
+        GROUP BY complaints.complaint_id";
 
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+$result = $conn->query($sql);
+
+$complaints = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $complaints[] = $row;
     }
+}
 
-    $userid = $_SESSION['userid'];
-
-    $sql = "SELECT * FROM complaints WHERE userid = '$userid'";
+//function to delete complaint
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $sql = "DELETE FROM complaints WHERE complaint_id = '$id'";
     $result = $conn->query($sql);
-
-    $complaints = [];
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $complaints[] = $row;
-        }
+    if ($result) {
+        echo '<div class="alert alert-success mt-4">Complaint deleted successfully.</div>';
+        // Redirect back to the same page to avoid re-deletion on page refresh
+        header("Location: mycomplaints.php");
+        exit();
+    } else {
+        echo '<div class="alert alert-danger mt-4">An error occurred while deleting complaint.</div>';
     }
-    //function to delete complaint
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
-        $sql = "DELETE FROM complaints WHERE complaint_id = '$id'";
-        $result = $conn->query($sql);
-        if ($result) {
-            echo '<div class="alert alert-success mt-4">Complaint deleted successfully.</div>';
-            // Redirect back to the same page to avoid re-deletion on page refresh
-            header("Location: mycomplaints.php");
-            exit();
-        } else {
-            echo '<div class="alert alert-danger mt-4">An error occurred while deleting complaint.</div>';
-        }
-    }
+}
 ?>
-    <h2 class="text-center mb-4" style="margin-top: 5px;">My Complaints</h2>
+<h2 class="text-center mb-4" style="margin-top: 5px;">My Complaints</h2>
 <div class="container mt-4" style="font-size:small;">
     <table class="table table-striped">
         <thead>
@@ -147,36 +165,63 @@
             </tr>
         </thead>
         <tbody>
-    <?php
-    $count = 1;
-    foreach ($complaints as $complaint) {
-        echo '<tr>';
-        echo '<td>' . $count++ . '</td>';
-        echo '<td>' . $complaint["name"] . '</td>';
-        echo '<td>' . $complaint["email"] . '</td>';
-        echo '<td>' . $complaint["id_passport"] . '</td>';
-        echo '<td>' . $complaint["phone"] . '</td>';
-        echo '<td>' . $complaint["address"] . '</td>';
-        echo '<td>' . $complaint["city"] . '</td>';
-        echo '<td>' . $complaint["issue_type"] . '</td>';
-        echo '<td>' . $complaint["issue"] . '</td>';
-        $imagesArray = explode(',', $complaint["image_path"]);
-        echo '<td>';
-        foreach ($imagesArray as $imagePath) {
-            echo '<img src="' . $imagePath . '" alt="Complaint Image" width="200px" height="100px">';
+        <?php
+$count = 1;
+foreach ($complaints as $complaint) {
+    echo '<tr>';
+    echo '<td>' . $count++ . '</td>';
+    echo '<td>' . $complaint["name"] . '</td>';
+    echo '<td>' . $complaint["email"] . '</td>';
+    echo '<td>' . $complaint["id_passport"] . '</td>';
+    echo '<td>' . $complaint["phone"] . '</td>';
+    echo '<td>' . $complaint["address"] . '</td>';
+    echo '<td>' . $complaint["city"] . '</td>';
+    echo '<td>' . $complaint["issue_type"] . '</td>';
+    echo '<td>' . $complaint["issue"] . '</td>';
+    echo '<td>';
+
+    // Check if the complaint has multiple images
+    if (!empty($complaint["image_paths"])) {
+        $imagesArray = explode(',', $complaint["image_paths"]);
+        if (count($imagesArray) > 1) {
+            echo '<div id="carouselExampleControls_' . $complaint["complaint_id"] . '" class="carousel slide" data-bs-ride="carousel">';
+            echo '<div class="carousel-inner">';
+            foreach ($imagesArray as $index => $imagePath) {
+                $activeClass = ($index === 0) ? 'active' : '';
+                echo '<div class="carousel-item ' . $activeClass . '">';
+                echo '<img src="' . $imagePath . '" class="d-block" style="width="400px; height="100px;" " " alt="Complaint Image">';
+                echo '</div>';
+            }
+            echo '</div>';
+            echo '<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_' . $complaint["complaint_id"] . '" data-bs-slide="prev">';
+            echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+            echo '<span class="visually-hidden">Previous</span>';
+            echo '</button>';
+            echo '<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_' . $complaint["complaint_id"] . '" data-bs-slide="next">';
+            echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+            echo '<span class="visually-hidden">Next</span>';
+            echo '</button>';
+            echo '</div>';
+        } else {
+            // Display single image without carousel
+            echo '<img src="' . $complaint["image_paths"] . '" alt="Complaint Image" width="200px" height="100px">';
         }
-        echo '</td>';
-                echo '<td>' . $complaint["date_created"] . '</td>';
-        echo '<td>' . $complaint["status"] . '</td>';
-        // Buttons inside the Actions column
-        echo '<td>';
-        echo '<a href="editcomplaint.php?id=' . $complaint["complaint_id"] . '" class="btn btn-primary">Edit</a>';
-        // Use JavaScript function for confirmation
-        echo '<a href="javascript:void(0);" onclick="confirmDelete(' . $complaint["complaint_id"] . ');" class="btn btn-danger" style="margin-top: 5px;">Delete</a>';
-        echo '</td>';
-        echo '</tr>';
+    } else {
+        // Handle the case when "image_paths" is empty or not present
+        echo 'No images available';
     }
-    ?>
+
+    echo '</td>';
+    echo '<td>' . $complaint["date_created"] . '</td>';
+    echo '<td>' . $complaint["status"] . '</td>';
+    // Buttons inside the Actions column
+    echo '<td>';
+    echo '<a href="editcomplaint.php?id=' . $complaint["complaint_id"] . '" class="btn btn-primary">Edit</a>';
+    echo '<a href="javascript:void(0);" onclick="confirmDelete(' . $complaint["complaint_id"] . ');" class="btn btn-danger" style="margin-top: 5px;">Delete</a>';
+    echo '</td>';
+    echo '</tr>';
+}
+?>
         </tbody>
     </table>
 </div>
@@ -190,7 +235,8 @@
     }
 </script>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+
 </html>
