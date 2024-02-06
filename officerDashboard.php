@@ -152,6 +152,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         deleteComplaint($complaintId);
     }
 }
+
+function getImagePaths($complaintId)
+{
+    global $conn;
+    $query = "SELECT file_path FROM complaint_images WHERE complaint_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 's', $complaintId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $imagePaths = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+
+    return $imagePaths;
+}
 ?>
 
 <!DOCTYPE html>
@@ -228,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <th>Issue</th>
                 <th>Sub-Issue</th>
                 <th>If sub issue is other</th>
-                <th>Image of Complaint</th>
+                <th>Image(s) of Complaint</th>
                 <th>Date and Time</th>
                 <th>Update Status</th>
                 <th>Action</th>
@@ -249,7 +263,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <td><?php echo $complaint['issue']; ?></td>
                     <td><?php echo $complaint['sub_issues']; ?></td>
                     <td><?php echo $complaint['if_choice_is_other']; ?></td>
-                    <td><img src="<?php echo $complaint['image_path']; ?>" alt="Complaint Image" width="150px" height="85px"></td>
+
+                    <td>
+                    <?php
+        $imagePaths = getImagePaths($complaint['complaint_id']);
+        if (!empty($imagePaths)) {
+            if (count($imagePaths) > 1) {
+                echo '<div id="carouselExampleControls_' . $complaint["complaint_id"] . '" class="carousel slide" data-bs-ride="carousel">';
+                echo '<div class="carousel-inner">';
+                foreach ($imagePaths as $index => $imagePath) {
+                    $activeClass = ($index === 0) ? 'active' : '';
+                    echo '<div class="carousel-item ' . $activeClass . '">';
+                    echo '<img src="' . $imagePath['file_path'] . '" class="d-block" style="width: 200px; height: 100px;" alt="Complaint Image">';
+                    echo '</div>';
+                }
+                echo '</div>';
+                echo '<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_' . $complaint["complaint_id"] . '" data-bs-slide="prev">';
+                echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+                echo '<span class="visually-hidden">Previous</span>';
+                echo '</button>';
+                echo '<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_' . $complaint["complaint_id"] . '" data-bs-slide="next">';
+                echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+                echo '<span class="visually-hidden">Next</span>';
+                echo '</button>';
+                echo '</div>';
+            } else {
+                // Display single image without carousel
+                echo '<img src="' . $imagePaths[0]['file_path'] . '" alt="Complaint Image" width="50px" height="50px">';
+            }
+        } else {
+            // Handle the case when there are no images for the complaint
+            echo 'No images available!';
+        }
+        ?>
+                    </td>
+                    
+                    
                     <td><?php echo $complaint['date_created']; ?></td>
                     <td>
                         <form action="officerDashboard.php" method="post">
@@ -274,5 +323,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </tbody>
     </table>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
 </body>
 </html>
