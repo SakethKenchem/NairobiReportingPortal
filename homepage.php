@@ -317,41 +317,32 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 ?>
-
-
-    <!-- Pagination -->
+<!--php pagination logic. I want 3 posts per page. I want to display the first 4 posts on the first page, the next 3 posts on the second page, and so on. I also want to display the pagination links at the bottom of the page. Also want nice bootstrap css styling. I want 4 posts per page. if there are 5 total posts then the 5th post will go on page 2-->
 <?php
-$postsPerPage = 5;
-$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-$startIndex = ($currentPage - 1) * $postsPerPage;
-$endIndex = $startIndex + $postsPerPage;
-$totalPosts = $result->num_rows;
-
-if ($totalPosts > 0) {
-    $totalPages = ceil($totalPosts / $postsPerPage);
-
-    // Previous Page
-// Previous Page
-if ($currentPage > 1) {
-    echo '<nav aria-label="Page navigation example" style="margin-top: 20px;"><ul class="pagination"><li class="page-item"><a class="page-link" href="homepage.php?page=' . ($currentPage - 1) . '">Previous</a></li>';
-}
-
-// Page Numbers
+$totalPages = ceil($totalPosts / 3);
+$prevPage = $currentPage - 1;
+$nextPage = $currentPage + 1;
+?>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item <?php echo $prevPage <= 0 ? 'disabled' : ''; ?>">
+            <a class="page-link" href="homepage.php?page=<?php echo $prevPage; ?>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <?php
 for ($i = 1; $i <= $totalPages; $i++) {
-    echo '<li class="page-item ' . ($i == $currentPage ? "active" : "") . '"><a class="page-link" href="homepage.php?page=' . $i . '">' . $i . '</a></li>';
-}
-
-// Next Page
-if ($currentPage < $totalPages) {
-    echo '<li class="page-item"><a class="page-link" href="homepage.php?page=' . ($currentPage + 1) . '">Next</a></li></ul></nav>';
-} else {
-    // Ensure the "Next" link is disabled on the last page  
-    echo '<li class="page-item disabled"><span class="page-link">Next</span></li></ul></nav>';
-}
-
+    $active = $i == $currentPage ? 'active' : '';
+    echo '<li class="page-item ' . $active . '"><a class="page-link" href="homepage.php?page=' . $i . '">' . $i . '</a></li>';
 }
 ?>
-
+        <li class="page-item <?php echo $nextPage > $totalPages ? 'disabled' : ''; ?>">
+            <a class="page-link" href="homepage.php?page=<?php echo $nextPage; ?>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 
     <!-- Scroll to top button -->
     <button onclick="topFunction()" id="myBtn" title="Go to top"
@@ -388,8 +379,6 @@ if ($currentPage < $totalPages) {
             }
         }
     </script>
-
-
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -398,6 +387,4 @@ if ($currentPage < $totalPages) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 </body>
-
-
 </html>
