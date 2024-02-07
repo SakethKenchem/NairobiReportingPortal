@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 06, 2024 at 12:56 PM
+-- Generation Time: Feb 07, 2024 at 06:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,6 +55,13 @@ CREATE TABLE `comments` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`comment_id`, `postid`, `userid`, `username`, `comment`, `timestamp`) VALUES
+(12, 20, 1, 'Saketh Kenchem', 'hello', '2024-02-07 05:39:10');
+
 -- --------------------------------------------------------
 
 --
@@ -83,7 +90,8 @@ CREATE TABLE `complaints` (
 --
 
 INSERT INTO `complaints` (`complaint_id`, `userid`, `name`, `email`, `id_passport`, `phone`, `address`, `city`, `issue_type`, `issue`, `sub_issues`, `if_choice_is_other`, `date_created`, `status`) VALUES
-(3, 1, 'Saketh Kenchem', 's.kenchem@gmail.com', 'V3735185', '0112716955', 'sasasasa', 'Embakasi', 'Water and Sanitation', 'fffffffffggggggggggggggggggggggggggggg', 'Water Contamination', '', '2024-02-06 14:41:25', 'Pending');
+(3, 1, 'Saketh Kenchem', 's.kenchem@gmail.com', 'V3735185', '0112716955', 'sasasasa', 'Embakasi', 'Water and Sanitation', 'fffffffffggggggggggggggggggggggggggggg', 'Water Contamination', '', '2024-02-06 14:41:25', 'received'),
+(4, 1, 'Saketh Kenchem', 'sakethkenchem154@gmail.com', 'V3735185', '0112716955', 'sassasssssssssssssss', 'Runda', 'Water and Sanitation', 'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'Water Meter Issues', '', '2024-02-07 08:41:24', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -105,7 +113,10 @@ INSERT INTO `complaint_images` (`image_id`, `file_path`, `complaint_id`) VALUES
 (5, 'uploads/broken pipe.jpg', 3),
 (6, 'uploads/garbage on streets.jpg', 3),
 (7, 'uploads/no street lights.jpeg', 3),
-(8, 'uploads/potholes  on road after rain.jpg', 3);
+(8, 'uploads/potholes  on road after rain.jpg', 3),
+(9, 'uploads/garbage on streets.jpg', 4),
+(10, 'uploads/no street lights.jpeg', 4),
+(11, 'uploads/potholes  on road after rain.jpg', 4);
 
 -- --------------------------------------------------------
 
@@ -150,12 +161,8 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`postid`, `description`, `votes`, `comments`, `username`, `location`, `datecreated`, `severity`, `userid`) VALUES
-(9, 'no street lights\r\n', 0, '1', 'Saketh Kenchem', 'Mpaka Road', '2023-11-14 20:42:58', '', 1),
-(10, 'saaaaaaaaaa', 1, '0', 'Saketh Kenchem', 'saaaaaaaa', '2024-01-19 19:39:56', '', 1),
-(11, 'weeeeee', 0, '0', 'Saketh Kenchem', 'ewwwwww', '2024-02-01 09:16:15', '', 1),
-(12, 'ewwwwwwwwww', 0, '0', 'Saketh Kenchem', 'ewwwww', '2024-02-01 09:16:22', '', 1),
-(13, 'ttttttttttttttttttttttttttt', 0, '0', 'Saketh Kenchem', 'saaaaaaaa', '2024-02-01 09:18:45', '', 1),
-(14, 'ttttttttttttt', 0, '2', 'Saketh Kenchem', 'tttttttttt', '2024-02-01 09:18:52', '', 1);
+(20, 'dssss', 0, '1', 'Saketh Kenchem', 'ewwwwww', '2024-02-07 07:26:02', '', 1),
+(21, 'cxxxxxx', 0, '0', 'Saketh Kenchem', 'ewwwww', '2024-02-07 08:40:39', '', 1);
 
 -- --------------------------------------------------------
 
@@ -168,6 +175,17 @@ CREATE TABLE `post_images` (
   `file_path` varchar(255) NOT NULL,
   `post_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `post_images`
+--
+
+INSERT INTO `post_images` (`image_id`, `file_path`, `post_id`) VALUES
+(12, 'postsImages/garbage on streets.jpg', 20),
+(13, 'postsImages/no street lights.jpeg', 20),
+(14, 'postsImages/potholes  on road after rain.jpg', 20),
+(15, 'postsImages/no street lights.jpeg', 21),
+(16, 'postsImages/potholes  on road after rain.jpg', 21);
 
 -- --------------------------------------------------------
 
@@ -269,7 +287,12 @@ INSERT INTO `userloginhistory` (`id`, `userid`, `login_time`, `logout_time`) VAL
 (38, 1, '2024-02-01 06:47:19', '2024-02-03 10:41:10'),
 (39, 1, '2024-02-01 07:02:06', '2024-02-03 10:41:10'),
 (40, 1, '2024-02-03 10:30:16', '2024-02-03 10:41:10'),
-(41, 1, '2024-02-06 10:54:41', NULL);
+(41, 1, '2024-02-06 10:54:41', '2024-02-06 16:38:14'),
+(42, 1, '2024-02-06 15:50:18', '2024-02-06 16:38:14'),
+(43, 1, '2024-02-06 16:38:28', NULL),
+(44, 1, '2024-02-06 17:08:21', NULL),
+(45, 1, '2024-02-07 05:25:44', NULL),
+(46, 1, '2024-02-07 06:37:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -380,19 +403,19 @@ ALTER TABLE `admin_credentials`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `complaint_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `complaint_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `complaint_images`
 --
 ALTER TABLE `complaint_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `officer_credentials`
@@ -404,13 +427,13 @@ ALTER TABLE `officer_credentials`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `postid` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `postid` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `post_images`
 --
 ALTER TABLE `post_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `reports_to_admin`
@@ -428,7 +451,7 @@ ALTER TABLE `userlogincredentials`
 -- AUTO_INCREMENT for table `userloginhistory`
 --
 ALTER TABLE `userloginhistory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `verification_codes`
@@ -469,7 +492,7 @@ ALTER TABLE `posts`
 -- Constraints for table `post_images`
 --
 ALTER TABLE `post_images`
-  ADD CONSTRAINT `post_images_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`postid`);
+  ADD CONSTRAINT `post_images_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`postid`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `userloginhistory`
