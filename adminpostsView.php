@@ -104,6 +104,11 @@ $result = $conn->query($sql);
             background-color: #4CAF50;
             color: white;
         }
+        .carousel-inner{
+            max-width: 400px;
+            max-height: 200px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -145,11 +150,63 @@ $result = $conn->query($sql);
             </tr>
         </thead>
         <tbody>
+        <?php
+function getImagePaths($postID, $conn)
+{
+    $getImagePathsQuery = "SELECT file_path FROM post_images WHERE post_id = '$postID'";
+    $imageResult = $conn->query($getImagePathsQuery);
+
+    $imagePaths = [];
+
+    if ($imageResult && $imageResult->num_rows > 0) {
+        while ($imageRow = $imageResult->fetch_assoc()) {
+            $imagePaths[] = $imageRow['file_path'];
+        }
+    }
+
+    return $imagePaths;
+}
+?>
             <?php while ($row = $result->fetch_assoc()) : ?>
                 <tr>
                     <td><?php echo $row['postid']; ?></td>
                     <td><?php echo $row['userid']; ?></td>
-                    <td><?php echo $row['image_path']; ?></td>
+                    <td>
+            <?php
+            // Retrieve images associated with the post from the post_images table
+            $postID = $row['postid'];
+            $imagePaths = getImagePaths($postID, $conn);
+
+            if (!empty($imagePaths)) {
+                if (count($imagePaths) > 1) {
+                    echo '<div id="carouselExampleControls_' . $row["postid"] . '" class="carousel slide" data-bs-ride="carousel">';
+                    echo '<div class="carousel-inner">';
+                    foreach ($imagePaths as $index => $imagePath) {
+                        $activeClass = ($index === 0) ? 'active' : '';
+                        echo '<div class="carousel-item ' . $activeClass . '">';
+                        echo '<img src="' . $imagePath . '" class="d-block w-100" alt="Post Image">';
+                        echo '</div>';
+                    }
+                    echo '</div>';
+                    echo '<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_' . $row["postid"] . '" data-bs-slide="prev">';
+                    echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+                    echo '<span class="visually-hidden">Previous</span>';
+                    echo '</button>';
+                    echo '<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_' . $row["postid"] . '" data-bs-slide="next">';
+                    echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+                    echo '<span class="visually-hidden">Next</span>';
+                    echo '</button>';
+                    echo '</div>';
+                } else {
+                    // Display single image without carousel
+                    echo '<img src="' . $imagePaths[0] . '" alt="Post Image" class="img-fluid">';
+                }
+            } else {
+                // Handle the case when there are no images for the post
+                echo 'No images available!';
+            }
+            ?>
+        </td>
                     <td><?php echo $row['description']; ?></td>
                     <td><?php echo $row['votes']; ?></td>
                     <td><?php echo $row['comment_count']; ?></td>
@@ -171,6 +228,9 @@ $result = $conn->query($sql);
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SYF5dwKxkP9AD8NQSlqjI5g0j8me5t7I8Fb1bw" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
