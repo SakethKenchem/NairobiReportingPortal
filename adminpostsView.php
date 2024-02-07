@@ -109,6 +109,9 @@ $result = $conn->query($sql);
             max-height: 200px;
             margin: 0 auto;
         }
+        body{
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
@@ -184,7 +187,7 @@ function getImagePaths($postID, $conn)
                     foreach ($imagePaths as $index => $imagePath) {
                         $activeClass = ($index === 0) ? 'active' : '';
                         echo '<div class="carousel-item ' . $activeClass . '">';
-                        echo '<img src="' . $imagePath . '" class="d-block w-100" alt="Post Image">';
+                        echo '<img src="' . $imagePath . '" class="d-block" style="width: 200px; height: 100px;" alt="Post Image">';
                         echo '</div>';
                     }
                     echo '</div>';
