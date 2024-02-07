@@ -34,60 +34,61 @@
     <title>Homepage for Officer</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-        }
-        .post-container {
-            max-width: 365px;
-            margin: 20px;
-            padding: 10px;
-            border: 1px solid #ccc; 
-        }
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+    }
 
-        .post-container img {
-            max-width: 100%;
-            border: 1px solid black;
-            border-radius: 3px;
-        }
+    .post-container {
+        max-width: 365px;
+        margin: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
 
-        .post-container p {
-            margin: 10px 0;
-        }
+    .post-container img {
+        max-width: 100%;
+        border: 1px solid black;
+        border-radius: 3px;
+    }
 
-        .navbar {
-            background-color: #333;
-            width: 1550px;
-        }
+    .post-container p {
+        margin: 10px 0;
+    }
 
-.navbar a {
-    color: white;
-    text-align: center;
-    padding: 14px 10px; /* Adjust padding for top/bottom and left/right */
-    text-decoration: none;
-    margin-right: 200px;
-    margin-left: 20px;
-}
+    .navbar {
+        background-color: #333;
+        /* Remove fixed width to make it responsive */
+    }
 
-.navbar a:hover {
-    background-color: #ddd;
-    color: black;
-}
+    .navbar a {
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        margin-right: 20px;
+    }
 
-.navbar a.activeLink {
-    background-color: yellow;
-    color: black;
-}
-    </style>
+    .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .navbar a.activeLink {
+        background-color: yellow;
+        color: black;
+    }
+</style>
+
 </head>
 <body>
 <div>
     <nav class="navbar">
         <a href="officerDashboard.php" class="activeLink"><i class="fas fa-briefcase"></i> Complaints</a>
         <a href="daily_report.php"><i class="fas fa-chart-line"></i> Daily Report</a>
-        <a href="homepageviewforofficer.php"><i class="fas fa-home"></i> Homepage</a>
+        <a href="homepageviewforofficer.php"><i class="fas fa-home" class="activeLink"></i> Homepage</a>
         <a href="officerlogouthandler.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </nav>
 </div>
