@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $subject = "Verification Code";
         $message = "Your verification code is: $verification_code";
-        $headers = 'From: your@gmail.com'; 
+        $headers = 'From: your@gmail.com';
 
 
         if (mail($email, $subject, $message, $headers)) {
@@ -56,4 +56,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 } else {
     echo "Invalid request.";
 }
-?>

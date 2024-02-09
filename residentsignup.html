@@ -1,121 +1,136 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Resident Sign Up</title>
-    <link rel="icon" href="Coat_of_Arms_of_Nairobi.svg.png" type="image/icon type">
+  <title>Resident Sign Up</title>
+  <link rel="icon" href="Coat_of_Arms_of_Nairobi.svg.png" type="image/icon type">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">    <style>
-        body {
-          margin: 0;
-          padding: 0;
-          background-color: #f1f1f1;
-        }
-        .container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100%;
-          margin-top: 10px;
-          margin-bottom: 20px;
-          width: 500px;
-        }
-        
-        .form-box {
-          background-color: #fff;
-          padding: 30px;
-          border-radius: 5px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-        
-        .form-box h2 {
-          text-align: center;
-        }
-        
-      .form-box input[type="text"],
-      .form-box input[type="password"],
-      .form-box input[type="email"],
-      .form-box input[type="text"],
-      .form-box input[type="tel"] {
-        width: 450px;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-      }
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f1f1f1;
+    }
 
-        .form-box .switch-page {
-          text-align: center;
-          margin-top: 10px;
-        }
-        
-        .form-box .switch-page a {
-          text-decoration: none;
-          color: #4CAF50;
-          font-weight: bold;
-        }
-        .btn {
-          background-color: #4CAF50;
-          padding: 10px;
-          width: 450px;
-          border-radius: 5px;
-          cursor: pointer;
-          color: white;
-        }
-        .btn:hover {
-          background-color: #4CAF50;
-          color: white;
-        }
-      </style>
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      width: 500px;
+    }
+
+    .form-box {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-box h2 {
+      text-align: center;
+    }
+
+    .form-box input[type="text"],
+    .form-box input[type="password"],
+    .form-box input[type="email"],
+    .form-box input[type="text"],
+    .form-box input[type="tel"] {
+      width: 450px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .form-box .switch-page {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .form-box .switch-page a {
+      text-decoration: none;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    .btn {
+      background-color: #4CAF50;
+      padding: 10px;
+      width: 450px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .btn:hover {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
 </head>
+
 <body>
 
-<nav class="navbar navbar-light bg-light container-fluid justify-content-between">
-        <a class="navbar-brand" href="#" style="margin-left: 10px;">
-          <img src="Coat_of_Arms_of_Nairobi.svg.png" width="30" height="30" class="d-inline-block align-top" alt="" >
-          Nairobi Reporting Portal
-        </a>
-        <a href="homepageviewnologin.php" style="color: black; margin-right: 10px; text-decoration: none;">View Homepage Without Signup</a>
-</nav>
-<div class="alert alert-warning  fade show" role="alert" style="width: 600px; margin-left: 375px; margin-top: 5px;">
-  <strong style="text-decoration: underline;">Security Phrase or Digit!</strong><br> Keep this secure. You will need it to login and reset your password. <br>
-  <strong>*Please note that this is a mandatory 2FA system to protect you and our platform from fraudsters and illegitimate posts and complaints.</strong>
-</div>
-    <div class="container">
-        <div class="form-box" id="signup-form">
-            <form method="post" action="residentsignuphandler.php">
-                <h2>Sign Up</h2>
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username:</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email:</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="national_id" class="form-label">National ID/Passport:</label>
-                    <input type="text" id="national_id" name="national_id" class="form-control" placeholder="National ID/Passport" required>
-                </div>
-                <div class="mb-3">
-                  <label for="phoneNumber" class="form-label">Phone Number: </label>
-                  <input type="tel" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="Phone Number" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password:</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-                </div>
-                <!--security phrase or digit-->
-                <div class="mb-3">
-                    <label for="security_phrase" class="form-label">Security Phrase (<b>A personal phrase or digit that only you will know</b>):</label>
-                    <input type="password" id="security_phrase_or_digit" name="security_phrase_or_digit" class="form-control" placeholder="Security Phrase" required>
-                </div>
-                <input type="submit" name="signup" value="Sign Up" class="btn">
-                <div class="switch-page">
-                    <p>Already have an account? <a href="residentlogin.html">Login</a></p>
-                </div>
-            </form>
+  <nav class="navbar navbar-light bg-light container-fluid justify-content-between">
+    <a class="navbar-brand" href="#" style="margin-left: 10px;">
+      <img src="Coat_of_Arms_of_Nairobi.svg.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      Nairobi Reporting Portal
+    </a>
+    <a href="homepageviewnologin.php" style="color: black; margin-right: 10px; text-decoration: none;">View Homepage
+      Without Signup</a>
+  </nav>
+  <div class="alert alert-warning  fade show" role="alert" style="width: 600px; margin-left: 375px; margin-top: 5px;">
+    <strong style="text-decoration: underline;">Security Phrase or Digit!</strong><br> Keep this secure. You will need
+    it to login and reset your password. <br>
+    <strong>*Please note that this is a mandatory 2FA system to protect you and our platform from fraudsters and
+      illegitimate posts and complaints.</strong>
+  </div>
+  <div class="container">
+    <div class="form-box" id="signup-form">
+      <form method="post" action="residentsignuphandler.php">
+        <h2>Sign Up</h2>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
         </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email:</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="mb-3">
+          <label for="national_id" class="form-label">National ID/Passport:</label>
+          <input type="text" id="national_id" name="national_id" class="form-control" placeholder="National ID/Passport"
+            required>
+        </div>
+        <div class="mb-3">
+          <label for="phoneNumber" class="form-label">Phone Number: </label>
+          <input type="tel" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="Phone Number"
+            required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        </div>
+        <!--security phrase or digit-->
+        <div class="mb-3">
+          <label for="security_phrase" class="form-label">Security Phrase (<b>A personal phrase or digit that only you
+              will know</b>):</label>
+          <input type="password" id="security_phrase_or_digit" name="security_phrase_or_digit" class="form-control"
+            placeholder="Security Phrase" required>
+        </div>
+        <input type="submit" name="signup" value="Sign Up" class="btn">
+        <div class="switch-page">
+          <p>Already have an account? <a href="residentlogin.html">Login</a></p>
+        </div>
+      </form>
     </div>
+  </div>
 
 </body>
+
 </html>

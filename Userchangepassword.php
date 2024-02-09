@@ -93,6 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset_password"])) {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Forgot Password</title>
     <!-- Add your favicon link here -->
@@ -145,101 +146,104 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset_password"])) {
             border-radius: 5px;
             background-color: green;
         }
-        .form-control{
+
+        .form-control {
             width: 350px;
         }
     </style>
 </head>
+
 <body>
-<nav class="navbar navbar-dark container-fluid justify-content-between">
-    <a class="navbar-brand" href="homepage.php" style="margin-left: 10px;">
-        <img src="Coat_of_Arms_of_Nairobi.svg.png" width="30" height="30" class="d-inline-block align-top1" alt="">
-        Nairobi Reporting Portal
-    </a>
-    <div class="navbar-links">
-        <a class="nav-link" href="complaintForm.php" style="color: white;">Complaint Form</a>
-        <a class="nav-link" href="postCreate.php" style="color: white;">Create Post</a>
-        <div class="dropdown" style="margin-top: -4px;">
-            <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                User Profile
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="userprofilePage.php">Update User Details</a>
-                <a class="dropdown-item" href="Userchangepassword.php">Change Password</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="mycomplaints.php">My Complaints</a>
-                <a class="dropdown-item" href="myposts.php">My Posts</a>
-                <a class="dropdown-item" href="mycomments.php">My Comments</a>
+    <nav class="navbar navbar-dark container-fluid justify-content-between">
+        <a class="navbar-brand" href="homepage.php" style="margin-left: 10px;">
+            <img src="Coat_of_Arms_of_Nairobi.svg.png" width="30" height="30" class="d-inline-block align-top1" alt="">
+            Nairobi Reporting Portal
+        </a>
+        <div class="navbar-links">
+            <a class="nav-link" href="complaintForm.php" style="color: white;">Complaint Form</a>
+            <a class="nav-link" href="postCreate.php" style="color: white;">Create Post</a>
+            <div class="dropdown" style="margin-top: -4px;">
+                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    User Profile
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="userprofilePage.php">Update User Details</a>
+                    <a class="dropdown-item" href="Userchangepassword.php">Change Password</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="mycomplaints.php">My Complaints</a>
+                    <a class="dropdown-item" href="myposts.php">My Posts</a>
+                    <a class="dropdown-item" href="mycomments.php">My Comments</a>
+                </div>
             </div>
+            <a class="nav-link" href="about_us.html" style="color: white;">About Us</a>
+            <a class="nav-link" href="logout.php" style="color: white;">Logout</a>
         </div>
-        <a class="nav-link" href="about_us.html" style="color: white;">About Us</a>
-        <a class="nav-link" href="logout.php" style="color: white;">Logout</a>
+    </nav>
+    <div class="container">
+        <h2 class="mt-4">Forgot Password</h2>
+
+        <?php if (isset($_SESSION["error_message"])) : ?>
+            <div class="alert alert-danger mt-3"><?php echo $_SESSION["error_message"]; ?></div>
+            <?php unset($_SESSION["error_message"]); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION["success_message"])) : ?>
+            <div class="alert alert-success mt-3"><?php echo $_SESSION["success_message"]; ?></div>
+            <?php unset($_SESSION["success_message"]); ?>
+        <?php endif; ?>
+
+        <form method="POST" action="Userchangepassword.php" class="mt-3">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">Send Code</button>
+
+            <div class="mb-3">
+                <label for="nationalid" class="form-label">National ID:</label>
+                <input type="text" class="form-control" id="nationalid" name="nationalid" required>
+            </div>
+            <div class="mb-3">
+                <label for="new_password" class="form-label">New Password:</label>
+                <input type="password" class="form-control" id="new_password" name="new_password" required>
+            </div>
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Confirm New Password:</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="verification_code" class="form-label">Verification Code:</label>
+                <input type="text" class="form-control" id="verification_code" name="verification_code" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" name="reset_password">Reset Password</button>
+        </form>
     </div>
-</nav>
-<div class="container">
-    <h2 class="mt-4">Forgot Password</h2>
 
-    <?php if (isset($_SESSION["error_message"])) : ?>
-        <div class="alert alert-danger mt-3"><?php echo $_SESSION["error_message"]; ?></div>
-        <?php unset($_SESSION["error_message"]); ?>
-    <?php endif; ?>
+    <script>
+        function sendVerificationCode() {
+            var email = document.getElementById("email").value;
 
-    <?php if (isset($_SESSION["success_message"])) : ?>
-        <div class="alert alert-success mt-3"><?php echo $_SESSION["success_message"]; ?></div>
-        <?php unset($_SESSION["success_message"]); ?>
-    <?php endif; ?>
-
-    <form method="POST" action="Userchangepassword.php" class="mt-3">
-        <div class="mb-3">
-            <label for="email" class="form-label">Email Address:</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">Send Code</button>
-
-        <div class="mb-3">
-            <label for="nationalid" class="form-label">National ID:</label>
-            <input type="text" class="form-control" id="nationalid" name="nationalid" required>
-        </div>
-        <div class="mb-3">
-            <label for="new_password" class="form-label">New Password:</label>
-            <input type="password" class="form-control" id="new_password" name="new_password" required>
-        </div>
-        <div class="mb-3">
-            <label for="confirm_password" class="form-label">Confirm New Password:</label>
-            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="verification_code" class="form-label">Verification Code:</label>
-            <input type="text" class="form-control" id="verification_code" name="verification_code" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary" name="reset_password">Reset Password</button>
-    </form>
-</div>
-
-<script>
-    function sendVerificationCode() {
-        var email = document.getElementById("email").value;
-
-        if (email.trim() === "") {
-            alert("Please enter your email address first.");
-            return;
-        }
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "send_verification_code.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                alert(xhr.responseText);
+            if (email.trim() === "") {
+                alert("Please enter your email address first.");
+                return;
             }
-        };
-        xhr.send("email=" + email);
-    }
-</script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "send_verification_code.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert(xhr.responseText);
+                }
+            };
+            xhr.send("email=" + email);
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

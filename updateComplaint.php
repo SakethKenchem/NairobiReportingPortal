@@ -70,4 +70,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo '<div class="alert alert-danger mt-4">Invalid request method.</div>';
 }
-?>

@@ -35,20 +35,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         $stored_national_id = $row['national_id'];
 
         if (password_verify($password, $hashed_password)) {
-            $entered_national_id = $_POST['national_id']; 
+            $entered_national_id = $_POST['national_id'];
             if ($entered_national_id === $stored_national_id) {
                 session_start();
                 $_SESSION['userid'] = $row['userid'];
                 $_SESSION['username'] = $username;
                 $_SESSION['national_id'] = $stored_national_id;
                 $_SESSION['loggedin'] = true;
-                
+
 
                 $userid = $row['userid'];
-                $login_time = date("Y-m-d H:i:s"); 
+                $login_time = date("Y-m-d H:i:s");
                 $insert_login_time_sql = "INSERT INTO userloginhistory (userid, login_time) VALUES ($userid, '$login_time')";
                 mysqli_query($conn, $insert_login_time_sql);
-                
+
                 header("Location: security_phrase_verify.php");
                 exit();
             } else {
@@ -70,4 +70,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         exit();
     }
 }
-?>
