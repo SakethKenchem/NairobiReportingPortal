@@ -290,8 +290,19 @@ if (isset($_POST["search"])) {
                             $post_id = $row["postid"];
                             $comments_result = $conn->query("SELECT * FROM comments WHERE postid = $post_id ORDER BY comment_id ASC");
                             while ($comment_row = $comments_result->fetch_assoc()) {
-                                echo '<p><b>' . $comment_row["username"] . ':</b> ' . $comment_row["comment"] . '</p>';
+
+                                $isCommentOwner = $comment_row["username"] === $_SESSION["username"];
+
+                                echo '<p id="comment-' . $comment_row["comment_id"] . '"><b>' . $comment_row["username"] . ':</b> ' . $comment_row["comment"];
+
+
+                                if ($isCommentOwner) {
+                                    echo ' <i class="fas fa-trash" onclick="deleteComment(' . $comment_row["comment_id"] . ')"></i>';
+                                }
+
+                                echo '</p>';
                             }
+
                             ?>
                             <form action="submit_comment.php" method="post">
                                 <input type="hidden" name="postid" value="<?php echo $row["postid"]; ?>">
@@ -372,6 +383,41 @@ if (isset($_POST["search"])) {
                 commentsBox.style.display = 'block';
             } else {
                 commentsBox.style.display = 'none';
+            }
+        }
+
+        function deleteComment(commentId) {
+
+            var confirmation = confirm("Are you sure you want to delete this comment?");
+            if (confirmation) {
+
+                var xhr = new XMLHttpRequest();
+
+
+                xhr.open("POST", "delete_comment.php", true);
+
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var response = JSON.parse(xhr.responseText);
+
+
+                        if (response.success) {
+
+                            var commentElement = document.getElementById('comment-' + commentId);
+                            commentElement.remove();
+                        } else {
+
+                            alert("Failed to delete the comment. Please try again later.");
+                        }
+                    }
+                };
+
+
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+                xhr.send("commentId=" + commentId);
             }
         }
     </script>
