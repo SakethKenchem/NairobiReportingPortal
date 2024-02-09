@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset_password"])) {
 <html>
 
 <head>
-    <title>Forgot Password</title>
+    <title>Change Password</title>
     <!-- Add your favicon link here -->
     <link rel="icon" href="Coat_of_Arms_of_Nairobi.svg.png" type="image/icon type">
 
@@ -180,7 +180,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset_password"])) {
         </div>
     </nav>
     <div class="container">
-        <h2 class="mt-4">Forgot Password</h2>
+        <h2 class="mt-4">Change Password</h2>
 
         <?php if (isset($_SESSION["error_message"])) : ?>
             <div class="alert alert-danger mt-3"><?php echo $_SESSION["error_message"]; ?></div>
