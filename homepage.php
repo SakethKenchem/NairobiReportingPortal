@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
@@ -138,6 +139,65 @@ if (isset($_POST["search"])) {
             max-width: 400px;
             max-height: 200px;
             margin: 0 auto;
+        }
+
+        /* make trash icon red and reduce color when hover over it */
+        .fa-trash {
+            margin-left: 5px;
+        }
+
+        .fa-trash:hover {
+            color: red;
+            filter: brightness(0.8);
+        }
+
+        .fa-edit {
+            margin-left: 15px;
+            color: grey;
+        }
+
+        .fa-edit:hover {
+            color: black;
+            filter: brightness(0.8);
+        }
+
+        /* make the comments box look like a card */
+        .comments-box {
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* make carousel controls visible on hover */
+        .carousel-control-prev,
+        .carousel-control-next {
+            visibility: hidden;
+        }
+
+        .carousel:hover .carousel-control-prev,
+        .carousel:hover .carousel-control-next {
+            visibility: visible;
+        }
+
+        /* make carousel controls bigger */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 5%;
+        }
+
+        /* make carousel controls bigger */
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* make carousel controls bigger */
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: black;
+            border-radius: 20%;
         }
     </style>
 </head>
@@ -295,9 +355,9 @@ if (isset($_POST["search"])) {
 
                                 echo '<p id="comment-' . $comment_row["comment_id"] . '"><b>' . $comment_row["username"] . ':</b> ' . $comment_row["comment"];
 
-
                                 if ($isCommentOwner) {
-                                    echo ' <i class="fas fa-trash" onclick="deleteComment(' . $comment_row["comment_id"] . ')"></i>';
+                                    echo ' <i class="fas fa-edit" style="color: grey;" onclick="editComment(' . $comment_row["comment_id"] . ')"></i>';
+                                    echo ' <i class="fas fa-trash" style="color: red;" onclick="deleteComment(' . $comment_row["comment_id"] . ')"></i>';
                                 }
 
                                 echo '</p>';
@@ -418,6 +478,61 @@ if (isset($_POST["search"])) {
 
 
                 xhr.send("commentId=" + commentId);
+            }
+        }
+
+        function editComment(commentId) {
+            var commentElement = document.getElementById('comment-' + commentId);
+            var currentComment = commentElement.innerText.split(':')[1].trim();
+
+            var newComment = prompt('Edit your comment:', currentComment);
+
+            if (newComment !== null && newComment !== "") {
+                // Send the updated comment to the server
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "edit_comment.php", true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var response = JSON.parse(xhr.responseText);
+
+                        if (response.success) {
+                            var commentElement = document.getElementById('comment-' + commentId);
+
+                            // Create a span element for the username and apply bold styling
+                            var usernameSpan = document.createElement('span');
+                            usernameSpan.style.fontWeight = 'bold';
+                            usernameSpan.innerText = response.username;
+
+                            // Set the content with the formatted username and comment
+                            commentElement.innerHTML = '';
+                            commentElement.appendChild(usernameSpan);
+                            commentElement.innerHTML += ': ' + response.comment;
+
+                            // Add edit and delete buttons back
+                            var editButton = document.createElement('i');
+                            editButton.classList.add('fas', 'fa-edit');
+                            editButton.style.marginLeft = '5px';
+                            editButton.onclick = function() {
+                                // Call your edit comment function here
+                            };
+
+                            var deleteButton = document.createElement('i');
+                            deleteButton.classList.add('fas', 'fa-trash');
+                            deleteButton.style.color = 'red';
+                            deleteButton.style.marginLeft = '5px';
+                            deleteButton.onclick = function() {
+                                // Call your delete comment function here
+                            };
+
+                            commentElement.appendChild(editButton);
+                            commentElement.appendChild(deleteButton);
+                        } else {
+                            alert("Failed to edit the comment. Please try again later.");
+                        }
+                    }
+                };
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.send("commentId=" + commentId + "&newComment=" + encodeURIComponent(newComment));
             }
         }
     </script>
