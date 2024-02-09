@@ -183,7 +183,7 @@ if (isset($_POST["search"])) {
         /* make carousel controls bigger */
         .carousel-control-prev,
         .carousel-control-next {
-            width: 5%;
+            width: 8%;
         }
 
         /* make carousel controls bigger */
@@ -197,8 +197,9 @@ if (isset($_POST["search"])) {
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
             background-color: black;
-            border-radius: 20%;
+            border-radius: 15%;
         }
+        
     </style>
 </head>
 
