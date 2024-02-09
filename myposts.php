@@ -56,7 +56,8 @@
             height: 100%;
             object-fit: cover;
         }
-        .carousel-inner{
+
+        .carousel-inner {
             max-width: 400px;
             max-height: 200px;
             margin: 0 auto;
@@ -87,7 +88,7 @@
                     User Profile
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="userprofilePage.php" >Update User Details</a>
+                    <a class="dropdown-item" href="userprofilePage.php">Update User Details</a>
                     <a class="dropdown-item" href="Userchangepassword.php">Change Password</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="mycomplaints.php">My Complaints</a>
