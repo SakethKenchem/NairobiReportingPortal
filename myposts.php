@@ -61,6 +61,15 @@
             max-height: 200px;
             margin: 0 auto;
         }
+
+        .delete-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -113,6 +122,20 @@
 
         $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : '';
 
+        if (isset($_GET['delete_postid'])) {
+            $delete_postid = $_GET['delete_postid'];
+
+            // Delete post and associated images from database
+            $delete_sql = "DELETE FROM posts WHERE postid = '$delete_postid'";
+            $delete_result = $conn->query($delete_sql);
+
+            if ($delete_result) {
+                echo '<div class="alert alert-success mt-4">Post deleted successfully.</div>';
+            } else {
+                echo '<div class="alert alert-danger mt-4">Failed to delete post.</div>';
+            }
+        }
+
         $sql = "SELECT posts.postid, posts.description, posts.location, posts.datecreated, GROUP_CONCAT(post_images.file_path) AS image_paths
                 FROM posts
                 INNER JOIN post_images ON posts.postid = post_images.post_id
@@ -130,6 +153,7 @@
                             <th>Description</th>
                             <th>Location</th>
                             <th>Date Created</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>';
@@ -166,6 +190,12 @@
                         <td>' . $row['description'] . '</td>
                         <td>' . $row['location'] . '</td>
                         <td>' . $row['datecreated'] . '</td>
+                        <td>
+                        <form method="GET" action="myposts.php" onsubmit="return confirm(`Are you sure you want to delete this post?`);">
+                            <input type="hidden" name="delete_postid" value="' . $row['postid'] . '">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
                     </tr>';
             }
 
