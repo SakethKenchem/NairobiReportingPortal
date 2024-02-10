@@ -149,6 +149,7 @@ if (isset($_POST["search"])) {
         .fa-trash:hover {
             color: red;
             filter: brightness(0.8);
+            cursor: pointer;
         }
 
         .fa-edit {
@@ -159,6 +160,7 @@ if (isset($_POST["search"])) {
         .fa-edit:hover {
             color: black;
             filter: brightness(0.8);
+            cursor: pointer;
         }
 
         /* make the comments box look like a card */
