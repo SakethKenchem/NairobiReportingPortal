@@ -130,7 +130,7 @@
                     echo '<td>' . $row['datecreated'] . '</td>';
 
                     echo '<td>
-                            <form method="post">
+                            <form method="post" onsubmit="return confirm(`Are you sure you want to delete this comment?`);">
                                 <input type="hidden" name="comment_id" value="' . $row['comment_id'] . '">
                                 <button type="submit" name="delete_comment" class="btn btn-danger">Delete</button>
                             </form>
