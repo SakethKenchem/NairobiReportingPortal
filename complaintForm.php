@@ -106,7 +106,7 @@
     <div class="container mt-4, form-control border">
         <h2 class="text-center mb-4">Resident Complaint Form</h2>
 
-        <div class="alert alert-warning alert-dismissible fade show" role="alert" id="locationWarning" style="width: 645px;"> 
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" id="locationWarning" style="width: 645px;">
             Using geolocation can provide inaccurate results. Verify the obtained address.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -249,8 +249,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 
     <script>
