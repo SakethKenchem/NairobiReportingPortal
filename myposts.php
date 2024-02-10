@@ -172,7 +172,7 @@
 
                 foreach ($imagePaths as $imagePath) {
                     echo '<div class="carousel-item' . ($firstImage ? ' active' : '') . '">
-                            <img src="' . $imagePath . '" class="d-block" style="width: 400px; height: 200px;" alt="Post Image">
+                            <img src="' . $imagePath . '" class="d-block" style="width: 400px; height: 180px;" alt="Post Image">
                           </div>';
                     $firstImage = false;
                 }
