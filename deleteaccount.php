@@ -1,8 +1,8 @@
 <?php
-// Initialize the session
+
 session_start();
 
-// Check if the user is logged in, if not, redirect to the login page
+
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: residentlogin.html");
     exit;
@@ -13,7 +13,7 @@ $username = "root";
 $password = "";
 $dbname = "isp";
 
-// Create connection
+
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
 if (!$conn) {
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_account"])) {
     $nationalId = $_POST["national_id"];
     $password = $_POST["password"];
 
-    // Check if the email, password, and national ID match in the database
+
     $query = "SELECT * FROM userlogincredentials WHERE email = '$email' AND national_id = '$nationalId'";
     $result = mysqli_query($conn, $query);
 
@@ -34,46 +34,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_account"])) {
     }
 
     if (mysqli_num_rows($result) === 0) {
-        // Email not found in the database, display an error message
         $_SESSION["error_message"] = "Email not found. Please check your email address.";
     } else {
-        // Fetch user data
         $user_data = mysqli_fetch_assoc($result);
 
-        // Verify the password
         if (password_verify($password, $user_data["password"])) {
-            // Password is correct, proceed with deleting the account
-
-            //this piece of code deletes all the complaints made by the user
             $user_id = $user_data["userid"];
             $delete_comments_query = "DELETE FROM comments WHERE userid = '$user_id'";
             $delete_comments_result = mysqli_query($conn, $delete_comments_query);
 
             if (!$delete_comments_result) {
-                // Handle the error, perhaps log it or display a message to the user
                 $_SESSION["error_message"] = "Error deleting comments.";
             } else {
-                // Comments deleted successfully, proceed to delete the user
                 $delete_query = "DELETE FROM userlogincredentials WHERE email = '$email'";
                 $delete_result = mysqli_query($conn, $delete_query);
 
                 if (!$delete_result) {
-                    // Error deleting the account, display an error message
                     $_SESSION["error_message"] = "Account deletion failed. Please try again later.";
                 } else {
-                    // Account deleted successfully, display a success message and redirect to the login page
                     $_SESSION["success_message"] = "Account deleted successfully.";
                     header("Location: logout.php");
                     exit();
                 }
             }
         } else {
-            // Password is incorrect, display an error message
             $_SESSION["error_message"] = "Incorrect password. Please try again.";
         }
     }
 
-    // Redirect to the appropriate page
     header("Location: deleteaccount.php");
     exit();
 }
